@@ -1,20 +1,27 @@
 package com.tui.fly.domain;
 
+import java.io.ObjectStreamException;
 import java.io.Serializable;
 import java.util.regex.Pattern;
 
 /**
  * The airport identified by the IATA 3 letter code.
  */
-public class Airport implements Serializable {
+public final class Airport implements Serializable {
 
+    private static final long serialVersionUID = 8009557463082635594L;
     private static final Pattern CODE_FORMAT = Pattern.compile("[A-Z]{3}");
+    private static final InstanceCache<String, Airport> AIRPORTS;
 
     public static Airport airport(String iataCode) {
         if (iataCode == null) {
             return null;
         }
-        return new Airport(iataCode);
+        return AIRPORTS.getCached(iataCode, new Airport(iataCode));
+    }
+
+    static {
+        AIRPORTS = new InstanceCache<>();
     }
 
     private final String iataCode;
@@ -28,6 +35,10 @@ public class Airport implements Serializable {
 
     public String getIataCode() {
         return iataCode;
+    }
+
+    private Object readResolve() throws ObjectStreamException {
+        return airport(iataCode);
     }
 
     @Override

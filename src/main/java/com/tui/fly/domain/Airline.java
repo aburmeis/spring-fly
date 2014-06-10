@@ -1,20 +1,27 @@
 package com.tui.fly.domain;
 
+import java.io.ObjectStreamException;
 import java.io.Serializable;
 import java.util.regex.Pattern;
 
 /**
  * The airline identified by the IATA 2 letter code.
  */
-public class Airline implements Serializable {
+public final class Airline implements Serializable {
 
+    private static final long serialVersionUID = 1636253326786747618L;
     private static final Pattern CODE_FORMAT = Pattern.compile("[A-Z0-9]{2}");
+    private static final InstanceCache<String, Airline> AIRPORTS;
 
     public static Airline airline(String iataCode) {
         if (iataCode == null) {
             return null;
         }
-        return new Airline(iataCode);
+        return AIRPORTS.getCached(iataCode, new Airline(iataCode));
+    }
+
+    static {
+        AIRPORTS = new InstanceCache<>();
     }
 
     private final String iataCode;
@@ -28,6 +35,10 @@ public class Airline implements Serializable {
 
     public String getIataCode() {
         return iataCode;
+    }
+
+    private Object readResolve() throws ObjectStreamException {
+        return airline(iataCode);
     }
 
     @Override
