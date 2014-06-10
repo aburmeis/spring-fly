@@ -1,7 +1,8 @@
 package com.tui.fly.domain;
 
-import org.springframework.util.Assert;
-
+/**
+ * A flight identified by the carrier and its flight number.
+ */
 public class Flight {
 
     private final Airline carrier;
@@ -10,7 +11,9 @@ public class Flight {
     private Airport to;
 
     public Flight(Airline carrier, int number) {
-        Assert.notNull(carrier, "Missing carrier");
+        if (carrier == null) {
+            throw new IllegalArgumentException("Missing carrier");
+        }
         this.carrier = carrier;
         this.number = number;
     }

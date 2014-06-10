@@ -1,29 +1,25 @@
 package com.tui.fly.domain;
 
-import java.io.ObjectStreamException;
 import java.io.Serializable;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Pattern;
 
+/**
+ * The airport identified by the IATA 3 letter code.
+ */
 public class Airport implements Serializable {
 
     private static final Pattern CODE_FORMAT = Pattern.compile("[A-Z]{3}");
-    private static final InstanceCache<String, Airport> AIRPORTS;
 
     public static Airport airport(String iataCode) {
         if (iataCode == null) {
             return null;
         }
-        return AIRPORTS.getCached(iataCode, new Airport(iataCode));
-    }
-
-    static {
-        AIRPORTS = new InstanceCache<>();
+        return new Airport(iataCode);
     }
 
     private final String iataCode;
 
-    public Airport(String code) {
+    private Airport(String code) {
         if (!CODE_FORMAT.matcher(code).matches()) {
             throw new IllegalArgumentException("Invalid IATA code for airport: " + code);
         }
@@ -32,10 +28,6 @@ public class Airport implements Serializable {
 
     public String getIataCode() {
         return iataCode;
-    }
-
-    private Object readResolve() throws ObjectStreamException {
-        return airport(iataCode);
     }
 
     @Override
