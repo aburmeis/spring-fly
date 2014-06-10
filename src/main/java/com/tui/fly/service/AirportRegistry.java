@@ -1,6 +1,7 @@
 package com.tui.fly.service;
 
 import com.tui.fly.domain.Airport;
+import com.tui.fly.domain.Location;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -9,8 +10,10 @@ import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 import static com.tui.fly.domain.Airport.airport;
+import static java.lang.Double.parseDouble;
 
 public class AirportRegistry {
 
@@ -28,7 +31,11 @@ public class AirportRegistry {
                 }
                 String[] columns = row.trim().split(" *, *");
                 if (columns.length > 0) {
-                    airports.put(columns[0], airport(columns[0]));
+                    Airport airport = airport(columns[0]);
+                    airports.put(columns[0], airport);
+                    if (columns.length > 4) {
+                        airport.setLocation(new Location(parseDouble(columns[3]), parseDouble(columns[4])));
+                    }
                 }
             }
         }
@@ -37,5 +44,13 @@ public class AirportRegistry {
 
     public Iterable<Airport> findAirports() {
         return airports.values();
+    }
+
+    public Airport getAirport(String iataCode) {
+        Airport airport = airports.get(iataCode);
+        if (airport == null) {
+            throw new NoSuchElementException("Unknown airport " + iataCode);
+        }
+        return airport;
     }
 }

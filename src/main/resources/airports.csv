@@ -1,49 +1,49 @@
 AMS,Amsterdam Schiphol
 AYT,Antalya
-ATL,Atlanta
+ATL,Atlanta,US
 BKK,Bangkok-Suvarnabhumi
-BCN,Barcelona
-BOS,Boston
-CLT,Charlotte
+BCN,Barcelona,ES,41.297078,2.078463
+BOS,Boston,US
+CLT,Charlotte,US,35.214000,-80.943139
 CTU,Chengdu
-ORD,Chicago O’Hare
-DFW,Dallas/Fort Worth
-DEN,Denver
-DTW,Detroit
+ORD,Chicago O’Hare,US
+DFW,Dallas/Fort Worth,US
+DEN,Denver,US
+DTW,Detroit,US
 DXB,Dubai
-FRA,Frankfurt am Main
+FRA,Frankfurt am Main,DE,50.026421,8.543125
 CAN,Guangzhou
 HKG,Hongkong
-IAH,Houston
+IAH,Houston,US
 IST,Istanbul-Atatürk
 CGK,Jakarta
 KUL,Kuala Lumpur
-LAS,Las Vegas
-LGW,London-Gatwick
-LHR,London-Heathrow
-LAX,Los Angeles
-MAD,Madrid-Barajas
+LAS,Las Vegas,US
+LGW,London-Gatwick,UK
+LHR,London-Heathrow,UK,51.477500,-0.461389
+LAX,Los Angeles,US,33.942522,-118.407161
+MAD,Madrid-Barajas,ES
 MNL,Manila
 MEL,Melbourne
 MEX,Mexiko-Stadt
-MIA,Miami
-MSP,Minneapolis-Saint Paul
+MIA,Miami,US,25.793250,-80.290556
+MSP,Minneapolis-Saint Paul,US
 DME,Moskau-Domodedowo
 SVO,Moskau-Scheremetjewo
 MUC,München
 BOM,Mumbai
 DEL,Neu-Delhi-Indira Gandhi
-JFK,New York-John-F.-Kennedy
-LGA,New York-LaGuardia
-EWR,New York-Newark
-MCO,Orlando
-CDG,Paris-Charles de Gaulle
-ORY,Paris-Orly
+JFK,New York-John-F.-Kennedy,US,40.639751,-73.778926
+LGA,New York-LaGuardia,US
+EWR,New York-Newark,US
+MCO,Orlando,US
+CDG,Paris-Charles de Gaulle,FR,49.009722,2.547778
+ORY,Paris-Orly,FR
 PEK,Peking
-PHL,Philadelphia
-PHX,Phoenix
+PHL,Philadelphia,US
+PHX,Phoenix,US
 FCO,Rom-Fiumicino
-SFO,San Francisco
+SFO,San Francisco,US
 GRU,São Paulo-Guarulhos
 SEA,Seattle-Tacoma
 ICN,Seoul-Incheon

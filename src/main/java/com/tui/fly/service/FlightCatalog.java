@@ -16,13 +16,14 @@ import java.util.List;
 import java.util.Set;
 
 import static com.tui.fly.domain.Airline.airline;
-import static com.tui.fly.domain.Airport.airport;
 
 public class FlightCatalog {
 
+    private final AirportRegistry airports;
     private final List<Flight> flights;
 
-    public FlightCatalog() throws IOException {
+    public FlightCatalog(AirportRegistry airports) throws IOException {
+        this.airports = airports;
         this.flights = new ArrayList<>();
         int no = 0;
         try (InputStream in = getClass().getResourceAsStream("/flights.csv")) {
@@ -36,8 +37,8 @@ public class FlightCatalog {
                 String[] columns = row.trim().split(" *, *");
                 if (columns.length == 3) {
                     Flight flight = new Flight(airline(columns[0]), 100 + no++);
-                    flight.setFrom(airport(columns[1]));
-                    flight.setTo(airport(columns[2]));
+                    flight.setFrom(airports.getAirport(columns[1]));
+                    flight.setTo(airports.getAirport(columns[2]));
                     flights.add(flight);
                 }
             }

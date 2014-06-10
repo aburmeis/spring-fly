@@ -17,6 +17,9 @@ public final class Airline implements Serializable {
         if (iataCode == null) {
             return null;
         }
+        if (!CODE_FORMAT.matcher(iataCode).matches()) {
+            throw new IllegalArgumentException("Invalid IATA code for airline: " + iataCode);
+        }
         return AIRPORTS.getCached(iataCode, new Airline(iataCode));
     }
 
@@ -27,9 +30,6 @@ public final class Airline implements Serializable {
     private final String iataCode;
 
     private Airline(String code) {
-        if (!CODE_FORMAT.matcher(code).matches()) {
-            throw new IllegalArgumentException("Invalid IATA code for airline: " + code);
-        }
         iataCode = code;
     }
 

@@ -11,8 +11,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.NoSuchElementException;
 
-import static com.tui.fly.domain.Airport.airport;
-
 public class Application {
 
     static AirportRegistry airports;
@@ -21,7 +19,7 @@ public class Application {
     static {
         try {
             airports = new AirportRegistry();
-            flights = new FlightCatalog();
+            flights = new FlightCatalog(airports);
         } catch (IOException e) {
             e.printStackTrace();
             System.exit(-1);
@@ -87,7 +85,7 @@ public class Application {
                 departure = words[1];
                 try {
                     boolean first = true;
-                    for (Airport airport : flights.findDestinations(airport(departure), maxStops)) {
+                    for (Airport airport : flights.findDestinations(airports.getAirport(departure), maxStops)) {
                         if (first) {
                             first = false;
                         } else {
@@ -117,7 +115,7 @@ public class Application {
                 destination = words[2];
                 try {
                     boolean found = false;
-                    for (Connection connection : flights.findConnections(airport(departure), airport(destination), maxStops)) {
+                    for (Connection connection : flights.findConnections(airports.getAirport(departure), airports.getAirport(destination), maxStops)) {
                         boolean first = true;
                         for (Flight flight : connection) {
                             if (first) {

@@ -17,6 +17,9 @@ public final class Airport implements Serializable {
         if (iataCode == null) {
             return null;
         }
+        if (!CODE_FORMAT.matcher(iataCode).matches()) {
+            throw new IllegalArgumentException("Invalid IATA code for airport: " + iataCode);
+        }
         return AIRPORTS.getCached(iataCode, new Airport(iataCode));
     }
 
@@ -25,16 +28,22 @@ public final class Airport implements Serializable {
     }
 
     private final String iataCode;
+    private Location location;
 
     private Airport(String code) {
-        if (!CODE_FORMAT.matcher(code).matches()) {
-            throw new IllegalArgumentException("Invalid IATA code for airport: " + code);
-        }
         iataCode = code;
     }
 
     public String getIataCode() {
         return iataCode;
+    }
+
+    public Location getLocation() {
+        return location;
+    }
+
+    public void setLocation(Location location) {
+        this.location = location;
     }
 
     private Object readResolve() throws ObjectStreamException {
