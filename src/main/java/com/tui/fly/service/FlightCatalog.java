@@ -3,6 +3,8 @@ package com.tui.fly.service;
 import com.tui.fly.domain.Airport;
 import com.tui.fly.domain.Connection;
 import com.tui.fly.domain.Flight;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -19,11 +21,10 @@ import static com.tui.fly.domain.Airline.airline;
 
 public class FlightCatalog {
 
-    private final AirportRegistry airports;
+    private final Logger log = LoggerFactory.getLogger(getClass());
     private final List<Flight> flights;
 
     public FlightCatalog(AirportRegistry airports) throws IOException {
-        this.airports = airports;
         this.flights = new ArrayList<>();
         int no = 0;
         try (InputStream in = getClass().getResourceAsStream("/flights.csv")) {
@@ -43,11 +44,13 @@ public class FlightCatalog {
                 }
             }
         }
+        log.info("Read {} flights", flights.size());
     }
 
     public Set<Airport> findDestinations(Airport departure, int maxStops) {
         Set<Airport> destinations = new HashSet<>();
         fillDestinations(departure, maxStops, destinations);
+        log.debug("Found {} destinations for {} with up to {} stops", destinations.size(), departure, maxStops);
         return destinations;
     }
 
@@ -63,7 +66,9 @@ public class FlightCatalog {
     }
 
     public List<Connection> findConnections(Airport departure, Airport destination, int maxStops) {
-        return findConnections(Collections.<Flight>emptyList(), departure, destination, maxStops);
+        List<Connection> connections = findConnections(Collections.<Flight>emptyList(), departure, destination, maxStops);
+        log.debug("Found {} connections from {} to {} with up to {} stops", connections.size(), departure, destination, maxStops);
+        return connections;
     }
 
     private List<Connection> findConnections(List<Flight> before, Airport departure, Airport destination, int maxStops) {
