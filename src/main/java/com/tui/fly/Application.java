@@ -2,18 +2,24 @@ package com.tui.fly;
 
 import com.tui.fly.domain.Airport;
 import com.tui.fly.service.AirportRegistry;
+import com.tui.fly.service.FlightCatalog;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.NoSuchElementException;
+
+import static com.tui.fly.domain.Airport.airport;
 
 public class Application {
 
     static AirportRegistry airports;
+    static FlightCatalog flights;
 
     static {
         try {
             airports = new AirportRegistry();
+            flights = new FlightCatalog();
         } catch (IOException e) {
             e.printStackTrace();
             System.exit(-1);
@@ -34,7 +40,7 @@ public class Application {
                     String command = words[0];
                     switch (command) {
                         case "airports":
-                            doAirports(words);
+                            doAirports();
                             break;
                         case "destinations": {
                             doDestinations(words);
@@ -56,7 +62,7 @@ public class Application {
         }
     }
 
-    private static void doAirports(String[] words) {
+    private static void doAirports() {
         boolean first = true;
         for (Airport airport : airports.findAirports()) {
             if (first) {
@@ -70,7 +76,32 @@ public class Application {
     }
 
     private static void doDestinations(String[] words) {
-
+        String departure;
+        int maxStops = 0;
+        switch (words.length) {
+            case 3:
+                maxStops = Integer.parseInt(words[2]);
+            case 2:
+                departure = words[1];
+                try {
+                    boolean first = true;
+                    for (Airport airport : flights.findDestinations(airport(departure), maxStops)) {
+                        if (first) {
+                            first = false;
+                        } else {
+                            System.out.print(',');
+                        }
+                        System.out.print(airport.getIataCode());
+                    }
+                    System.out.println();
+                } catch (NoSuchElementException unknown) {
+                    System.err.println(unknown.getMessage());
+                }
+                break;
+            default:
+                System.err.println("Usage: destinations <departureAirport> [<maxStops>]");
+                break;
+        }
     }
 
     private static void doConnections(String[] words) {
