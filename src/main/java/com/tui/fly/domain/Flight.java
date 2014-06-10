@@ -14,6 +14,9 @@ public class Flight {
         if (carrier == null) {
             throw new IllegalArgumentException("Missing carrier");
         }
+        if (number <= 0) {
+            throw new IllegalArgumentException("Invalid flight no: " + number);
+        }
         this.carrier = carrier;
         this.number = number;
     }
@@ -72,6 +75,6 @@ public class Flight {
 
     @Override
     public String toString() {
-        return carrier.toString() + number + ':' + from + "->" + to;
+        return carrier.toString() + ' ' + number;
     }
 }

@@ -25,4 +25,32 @@ public class Connection implements Iterable<Flight> {
     public Iterator<Flight> iterator() {
         return flights.iterator();
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        Connection flights1 = (Connection)o;
+
+        if (!flights.equals(flights1.flights)) {
+            return false;
+        }
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return flights.hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return flights.toString();
+    }
 }

@@ -11,12 +11,16 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.NoSuchElementException;
 
-public class Application {
+public class Application implements Runnable {
 
-    static AirportRegistry airports;
-    static FlightCatalog flights;
+    public static void main(String... args) {
+        new Application().run();
+    }
 
-    static {
+    private AirportRegistry airports;
+    private FlightCatalog flights;
+
+    private Application() {
         try {
             airports = new AirportRegistry();
             flights = new FlightCatalog(airports);
@@ -26,14 +30,16 @@ public class Application {
         }
     }
 
-    public static void main(String... args) {
+
+    @Override
+    public void run() {
         BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
         String line;
         while (true) {
             try {
                 line = in.readLine();
                 if (line == null) {
-                    break;
+                    return;
                 }
                 String[] words = line.split(" +");
                 if (words.length > 0) {
@@ -58,11 +64,12 @@ public class Application {
                 }
             } catch (IOException e) {
                 e.printStackTrace();
+                return;
             }
         }
     }
 
-    private static void doAirports() {
+    private void doAirports() {
         boolean first = true;
         for (Airport airport : airports.findAirports()) {
             if (first) {
@@ -75,7 +82,7 @@ public class Application {
         System.out.println();
     }
 
-    private static void doDestinations(String[] words) {
+    private void doDestinations(String[] words) {
         String departure;
         int maxStops = 0;
         switch (words.length) {
@@ -104,7 +111,7 @@ public class Application {
         }
     }
 
-    private static void doConnections(String[] words) {
+    private void doConnections(String[] words) {
         String departure, destination;
         int maxStops = 1;
         switch (words.length) {
