@@ -1,6 +1,8 @@
 package com.tui.fly;
 
 import com.tui.fly.domain.Airport;
+import com.tui.fly.domain.Connection;
+import com.tui.fly.domain.Flight;
 import com.tui.fly.service.AirportRegistry;
 import com.tui.fly.service.FlightCatalog;
 
@@ -105,6 +107,42 @@ public class Application {
     }
 
     private static void doConnections(String[] words) {
-
+        String departure, destination;
+        int maxStops = 1;
+        switch (words.length) {
+            case 4:
+                maxStops = Integer.parseInt(words[3]);
+            case 3:
+                departure = words[1];
+                destination = words[2];
+                try {
+                    boolean found = false;
+                    for (Connection connection : flights.findConnections(airport(departure), airport(destination), maxStops)) {
+                        boolean first = true;
+                        for (Flight flight : connection) {
+                            if (first) {
+                                System.out.print(flight.getFrom().getIataCode());
+                                first = false;
+                            }
+                            System.out.print(' ');
+                            System.out.print(flight.getCarrier().getIataCode());
+                            System.out.print(String.valueOf(flight.getNumber()));
+                            System.out.print(' ');
+                            System.out.print(flight.getTo().getIataCode());
+                        }
+                        System.out.println();
+                        found = true;
+                    }
+                    if (!found) {
+                        System.err.println("No connections");
+                    }
+                } catch (NoSuchElementException unknown) {
+                    System.err.println(unknown.getMessage());
+                }
+                break;
+            default:
+                System.err.println("Usage: connections <departureAirport> <destinationAirport> [<maxStops>]");
+                break;
+        }
     }
 }

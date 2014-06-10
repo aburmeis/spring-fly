@@ -1,6 +1,7 @@
 package com.tui.fly.service;
 
 import com.tui.fly.domain.Airport;
+import com.tui.fly.domain.Connection;
 import com.tui.fly.domain.Flight;
 
 import java.io.BufferedReader;
@@ -9,6 +10,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -57,5 +59,27 @@ public class FlightCatalog {
                 }
             }
         }
+    }
+
+    public List<Connection> findConnections(Airport departure, Airport destination, int maxStops) {
+        return findConnections(Collections.<Flight>emptyList(), departure, destination, maxStops);
+    }
+
+    private List<Connection> findConnections(List<Flight> before, Airport departure, Airport destination, int maxStops) {
+        List<Connection> connections = new ArrayList<>();
+        for (Flight flight : flights) {
+            if (flight.getFrom().equals(departure)) {
+                if (flight.getTo().equals(destination)) {
+                    List<Flight> route = new ArrayList<>(before);
+                    route.add(flight);
+                    connections.add(new Connection(route));
+                } else if (maxStops > 0) {
+                    List<Flight> nextBefore = new ArrayList<>(before);
+                    nextBefore.add(flight);
+                    connections.addAll(findConnections(nextBefore, flight.getTo(), destination, maxStops - 1));
+                }
+            }
+        }
+        return connections;
     }
 }
