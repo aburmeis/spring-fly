@@ -3,7 +3,7 @@ package com.tui.fly.domain;
 /**
  * A flight identified by the carrier and its flight number.
  */
-public class Flight {
+public final class Flight {
 
     private final Airline carrier;
     private final int number;

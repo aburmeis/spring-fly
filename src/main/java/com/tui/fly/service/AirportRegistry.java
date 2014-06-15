@@ -1,6 +1,7 @@
 package com.tui.fly.service;
 
 import com.tui.fly.domain.Airport;
+import com.tui.fly.domain.Country;
 import com.tui.fly.domain.Location;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,6 +37,9 @@ public class AirportRegistry {
                 if (columns.length > 0) {
                     Airport airport = airport(columns[0]);
                     airports.add(airport);
+                    if (columns.length > 2) {
+                        airport.setCountry(Country.country(columns[2]));
+                    }
                     if (columns.length > 4) {
                         airport.setLocation(new Location(parseDouble(columns[3]), parseDouble(columns[4])));
                     }

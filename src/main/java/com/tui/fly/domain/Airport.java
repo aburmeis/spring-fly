@@ -29,6 +29,7 @@ public final class Airport implements Serializable {
 
     private final String iataCode;
     private Location location;
+    private Country country;
 
     private Airport(String code) {
         iataCode = code;
@@ -44,6 +45,14 @@ public final class Airport implements Serializable {
 
     public void setLocation(Location location) {
         this.location = location;
+    }
+
+    public Country getCountry() {
+        return country;
+    }
+
+    public void setCountry(Country country) {
+        this.country = country;
     }
 
     private Object readResolve() throws ObjectStreamException {
