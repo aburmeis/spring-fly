@@ -14,10 +14,13 @@ public final class Connection implements Iterable<Flight> {
     private final List<Flight> flights;
 
     public Connection(Flight... flights) {
-        this.flights = asList(flights);
+        this(asList(flights));
     }
 
     public Connection(List<Flight> flights) {
+        if (flights.isEmpty()) {
+            throw new IllegalArgumentException("missing flight(s) on connection");
+        }
         this.flights = flights;
     }
 

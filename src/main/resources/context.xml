@@ -21,4 +21,12 @@
         <constructor-arg value="flights.csv"/>
     </bean>
 
+    <bean id="conversionService" class="org.springframework.context.support.ConversionServiceFactoryBean">
+        <property name="converters">
+            <set>
+                <bean class="com.tui.fly.domain.ConnectionToStringConverter"/>
+            </set>
+        </property>
+    </bean>
+
 </beans>
