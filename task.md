@@ -1,13 +1,13 @@
-Task 3
+Task 4
 ------
 
-Use annotations
+Unique conversion
 
-Add the appropriate annotations to your bean classes. Ese the XML beans file only if option `-xml`is passed to the
-application. Introduce a configuration class to be used by default.
+Conversions are spread all over the code base. Spring has a `ConversionService` to do this centralized but extensible.
+Use the service in the application to convert connections to strings.
 
 Tips:
 
-* use `AnnotationConfigApplicationContext` instead of `GenericXmlApplicationContext`
-* use `@Component`, `@Service`, `@Autowired`, `@Configuration`, `@Bean` and `@Qualifier` if needed
-* you might need to modify the XML context to load with `@Autowired` added
+* write and test the converter implementing the `Converter` interface
+* register them in the configuration using a `ConversionServiceFactoryBean`
+* `ConversionService` is provided by Spring, just use it autowired!
