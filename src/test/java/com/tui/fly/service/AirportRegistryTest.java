@@ -2,8 +2,8 @@ package com.tui.fly.service;
 
 import com.tui.fly.domain.Airport;
 import org.junit.Test;
+import org.springframework.core.io.ByteArrayResource;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.NoSuchElementException;
 
@@ -46,8 +46,8 @@ public class AirportRegistryTest {
     }
 
     private AirportRegistry createRegistry(String data) throws IOException {
-        AirportRegistry registry = new AirportRegistry(new ByteArrayInputStream(data.getBytes("UTF-8")));
-        registry.loadData();
+        AirportRegistry registry = new AirportRegistry(new ByteArrayResource(data.getBytes("UTF-8")));
+        registry.afterPropertiesSet();
         return registry;
     }
 }

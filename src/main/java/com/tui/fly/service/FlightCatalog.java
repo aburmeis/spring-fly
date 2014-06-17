@@ -5,27 +5,29 @@ import com.tui.fly.domain.Connection;
 import com.tui.fly.domain.Flight;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.core.io.Resource;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.*;
 
 import static com.tui.fly.domain.Airline.airline;
 import static java.util.Arrays.asList;
 
-public class FlightCatalog {
+public class FlightCatalog implements InitializingBean {
 
     private final Logger log = LoggerFactory.getLogger(getClass());
     private final AirportRegistry airports;
     private List<Flight> flights;
-    private final InputStream data;
+    private final Resource data;
 
-    public FlightCatalog(AirportRegistry airports, InputStream data) {
+    public FlightCatalog(AirportRegistry airports, Resource data) {
         this.airports = airports;
         this.data = data;
     }
 
-    public void loadData() throws IOException {
+    @Override
+    public void afterPropertiesSet() throws IOException {
         this.flights = new ArrayList<>();
         int no = 0;
         for (String[] columns : new CsvReader(data)) {

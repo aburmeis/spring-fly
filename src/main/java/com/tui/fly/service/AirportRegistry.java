@@ -5,9 +5,10 @@ import com.tui.fly.domain.Country;
 import com.tui.fly.domain.Location;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.core.io.Resource;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.HashSet;
 import java.util.NoSuchElementException;
 import java.util.Set;
@@ -16,17 +17,18 @@ import static com.tui.fly.domain.Airport.airport;
 import static java.lang.Double.parseDouble;
 import static java.util.Arrays.asList;
 
-public class AirportRegistry {
+public class AirportRegistry implements InitializingBean {
 
     private final Logger log = LoggerFactory.getLogger(getClass());
-    private final InputStream data;
+    private final Resource data;
     private Set<Airport> airports;
 
-    public AirportRegistry(InputStream data) {
+    public AirportRegistry(Resource data) {
         this.data = data;
     }
 
-    public void loadData() throws IOException {
+    @Override
+    public void afterPropertiesSet() throws IOException {
         airports = new HashSet<>();
         for (String[] columns : new CsvReader(data)) {
             if (columns.length > 0) {

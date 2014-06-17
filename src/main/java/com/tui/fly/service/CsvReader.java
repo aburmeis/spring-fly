@@ -1,8 +1,9 @@
 package com.tui.fly.service;
 
+import org.springframework.core.io.Resource;
+
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.util.Iterator;
@@ -10,15 +11,19 @@ import java.util.NoSuchElementException;
 
 class CsvReader implements Iterable<String[]> {
 
-    private final InputStream in;
+    private final Resource in;
 
-    public CsvReader(InputStream in) {
+    public CsvReader(Resource in) {
         this.in = in;
     }
 
     @Override
     public Iterator<String[]> iterator() {
-        return new CsvIterator(new BufferedReader(new InputStreamReader(in, Charset.forName("UTF-8"))));
+        try {
+            return new CsvIterator(new BufferedReader(new InputStreamReader(in.getInputStream(), Charset.forName("UTF-8"))));
+        } catch (IOException e) {
+            throw new IllegalStateException("Cannot read CSV data " + in, e);
+        }
     }
 
     private static class CsvIterator implements Iterator<String[]> {

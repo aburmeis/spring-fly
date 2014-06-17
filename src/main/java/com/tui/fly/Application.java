@@ -5,6 +5,7 @@ import com.tui.fly.domain.Connection;
 import com.tui.fly.domain.Flight;
 import com.tui.fly.service.AirportRegistry;
 import com.tui.fly.service.FlightCatalog;
+import org.springframework.core.io.ClassPathResource;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -22,10 +23,10 @@ public class Application implements Runnable {
 
     private Application() {
         try {
-            airports = new AirportRegistry(getClass().getResourceAsStream("/airports.csv"));
-            airports.loadData();
-            flights = new FlightCatalog(airports, getClass().getResourceAsStream("/flights.csv"));
-            flights.loadData();
+            airports = new AirportRegistry(new ClassPathResource("airports.csv"));
+            airports.afterPropertiesSet();
+            flights = new FlightCatalog(airports, new ClassPathResource("flights.csv"));
+            flights.afterPropertiesSet();
         } catch (IOException e) {
             e.printStackTrace();
             System.exit(-1);

@@ -8,8 +8,8 @@ import org.junit.Test;
 import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
+import org.springframework.core.io.ByteArrayResource;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.NoSuchElementException;
 
@@ -75,8 +75,8 @@ public class FlightCatalogTest {
                         throw new NoSuchElementException("mock");
                     }
                 });
-        flights = new FlightCatalog(airports, new ByteArrayInputStream("LH,FRA,LHR\nAB,LHR,MIA\nU,FRA,LHR".getBytes("UTF-8")));
-        flights.loadData();
+        flights = new FlightCatalog(airports, new ByteArrayResource("LH,FRA,LHR\nAB,LHR,MIA\nU,FRA,LHR".getBytes("UTF-8")));
+        flights.afterPropertiesSet();
         assertThat(flights.findDestinations(airport("FRA"), 1).size(), is(1));
     }
 
@@ -90,8 +90,8 @@ public class FlightCatalogTest {
                         return airport((String) invocation.getArguments()[0]);
                     }
                 });
-        flights = new FlightCatalog(airports, new ByteArrayInputStream("LH,FRA,LHR\nAB,LHR,MIA".getBytes("UTF-8")));
-        flights.loadData();
+        flights = new FlightCatalog(airports, new ByteArrayResource("LH,FRA,LHR\nAB,LHR,MIA".getBytes("UTF-8")));
+        flights.afterPropertiesSet();
     }
 
 }
