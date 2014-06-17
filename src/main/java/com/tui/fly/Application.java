@@ -5,23 +5,41 @@ import com.tui.fly.domain.Connection;
 import com.tui.fly.domain.Flight;
 import com.tui.fly.service.AirportRegistry;
 import com.tui.fly.service.FlightCatalog;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.support.GenericXmlApplicationContext;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.stereotype.Component;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.NoSuchElementException;
 
+@Component
 public class Application implements Runnable {
 
     public static void main(String... args) {
-        ConfigurableApplicationContext context = createXmlContext();
+        boolean useXml = false;
+        for (String arg : args) {
+            if ("-xml".equals(arg)) {
+                useXml = true;
+            } else {
+                System.err.println("Usage: [-xml]");
+            }
+        }
+        ConfigurableApplicationContext context = useXml ? createXmlContext() : createAnnoationContext();
         context.refresh();
         Application application = context.getBean(Application.class);
         application.run();
         context.close();
+    }
+
+    private static ConfigurableApplicationContext createAnnoationContext() {
+        AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext();
+        context.register(Config.class);
+        return context;
     }
 
     private static ConfigurableApplicationContext createXmlContext() {
@@ -33,6 +51,7 @@ public class Application implements Runnable {
     private final AirportRegistry airports;
     private final FlightCatalog flights;
 
+    @Autowired
     public Application(AirportRegistry airports, FlightCatalog flights) {
         this.airports = airports;
         this.flights = flights;
