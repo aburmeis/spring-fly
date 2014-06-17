@@ -22,12 +22,19 @@ import static com.tui.fly.domain.Airline.airline;
 public class FlightCatalog {
 
     private final Logger log = LoggerFactory.getLogger(getClass());
-    private final List<Flight> flights;
+    private final AirportRegistry airports;
+    private List<Flight> flights;
+    private final InputStream data;
 
-    public FlightCatalog(AirportRegistry airports) throws IOException {
+    public FlightCatalog(AirportRegistry airports, InputStream data) {
+        this.airports = airports;
+        this.data = data;
+    }
+
+    public void loadData() throws IOException {
         this.flights = new ArrayList<>();
         int no = 0;
-        try (InputStream in = getClass().getResourceAsStream("/flights.csv")) {
+        try (InputStream in = data) {
             BufferedReader reader = new BufferedReader(new InputStreamReader(in, Charset.forName("UTF-8")));
             String row;
             while (true) {
@@ -45,6 +52,7 @@ public class FlightCatalog {
             }
         }
         log.info("Read {} flights", flights.size());
+
     }
 
     public Set<Airport> findDestinations(Airport departure, int maxStops) {

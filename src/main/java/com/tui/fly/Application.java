@@ -22,8 +22,10 @@ public class Application implements Runnable {
 
     private Application() {
         try {
-            airports = new AirportRegistry();
-            flights = new FlightCatalog(airports);
+            airports = new AirportRegistry(getClass().getResourceAsStream("/airports.csv"));
+            airports.loadData();
+            flights = new FlightCatalog(airports, getClass().getResourceAsStream("/flights.csv"));
+            flights.loadData();
         } catch (IOException e) {
             e.printStackTrace();
             System.exit(-1);

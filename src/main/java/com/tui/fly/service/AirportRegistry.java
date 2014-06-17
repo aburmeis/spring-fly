@@ -21,11 +21,16 @@ import static java.lang.Double.parseDouble;
 public class AirportRegistry {
 
     private final Logger log = LoggerFactory.getLogger(getClass());
-    private final Set<Airport> airports;
+    private final InputStream data;
+    private Set<Airport> airports;
 
-    public AirportRegistry() throws IOException {
+    public AirportRegistry(InputStream data) {
+        this.data = data;
+    }
+
+    public void loadData() throws IOException {
         airports = new HashSet<>();
-        try (InputStream in = getClass().getResourceAsStream("/airports.csv")) {
+        try (InputStream in = data) {
             BufferedReader reader = new BufferedReader(new InputStreamReader(in, Charset.forName("UTF-8")));
             String row;
             while (true) {
