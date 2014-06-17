@@ -6,18 +6,12 @@ import com.tui.fly.domain.Flight;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static com.tui.fly.domain.Airline.airline;
+import static java.util.Arrays.asList;
 
 public class FlightCatalog {
 
@@ -36,13 +30,23 @@ public class FlightCatalog {
         int no = 0;
         for (String[] columns : new CsvReader(data)) {
             if (columns.length == 3) {
-                Flight flight = new Flight(airline(columns[0]), 100 + no++);
-                flight.setFrom(airports.getAirport(columns[1]));
-                flight.setTo(airports.getAirport(columns[2]));
-                flights.add(flight);
+                int number = 100 + no++;
+                try {
+                    Flight flight = parseFlight(columns, number);
+                    flights.add(flight);
+                } catch (RuntimeException invalid) {
+                    log.warn("Skipping invalid data {}: {}", asList(columns), invalid);
+                }
             }
         }
         log.info("Read {} flights", flights.size());
+    }
+
+    private Flight parseFlight(String[] columns, int number) {
+        Flight flight = new Flight(airline(columns[0]), number);
+        flight.setFrom(airports.getAirport(columns[1]));
+        flight.setTo(airports.getAirport(columns[2]));
+        return flight;
     }
 
     public Set<Airport> findDestinations(Airport departure, int maxStops) {

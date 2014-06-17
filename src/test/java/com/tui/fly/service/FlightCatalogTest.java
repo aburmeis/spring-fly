@@ -11,9 +11,11 @@ import org.mockito.stubbing.Answer;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.NoSuchElementException;
 
 import static com.tui.fly.domain.Airline.airline;
 import static com.tui.fly.domain.Airport.airport;
+import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.anyString;
@@ -57,6 +59,25 @@ public class FlightCatalogTest {
     public void noConnectionIsEmpty() throws IOException {
         assertThat(flights.findConnections(airport("FRA"), airport("DEL"), 2).size(),
                 is(0));
+    }
+
+    @Test
+    public void invalidDataIsSkipped() throws IOException {
+        AirportRegistry airports = Mockito.mock(AirportRegistry.class);
+        when(airports.getAirport(anyString()))
+                .thenAnswer(new Answer<Airport>() {
+                    @Override
+                    public Airport answer(InvocationOnMock invocation) throws Throwable {
+                        String code = (String) invocation.getArguments()[0];
+                        if (asList("FRA", "LHR").contains(code)) {
+                            return airport(code);
+                        }
+                        throw new NoSuchElementException("mock");
+                    }
+                });
+        flights = new FlightCatalog(airports, new ByteArrayInputStream("LH,FRA,LHR\nAB,LHR,MIA\nU,FRA,LHR".getBytes("UTF-8")));
+        flights.loadData();
+        assertThat(flights.findDestinations(airport("FRA"), 1).size(), is(1));
     }
 
     @Before

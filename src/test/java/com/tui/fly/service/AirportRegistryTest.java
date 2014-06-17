@@ -28,6 +28,11 @@ public class AirportRegistryTest {
     }
 
     @Test
+    public void invalidAirportIsSkipped() throws IOException {
+        assertThat(createRegistry("FRA\nDE\nLHR,Illegal,UK,3f,e2\nJFK").findAirports().size(), is(2));
+    }
+
+    @Test
     public void airportHasCountryAndLocation() throws IOException {
         Airport londonHeathrow = createRegistry("LHR,London-Heathrow,UK,51.477500,-0.461389").getAirport("LHR");
         assertThat(londonHeathrow.getCountry(), is(country("UK")));
