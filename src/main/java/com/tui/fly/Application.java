@@ -2,13 +2,13 @@ package com.tui.fly;
 
 import com.tui.fly.domain.Airport;
 import com.tui.fly.domain.Connection;
-import com.tui.fly.domain.Flight;
 import com.tui.fly.service.AirportRegistry;
 import com.tui.fly.service.FlightCatalog;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.support.GenericXmlApplicationContext;
+import org.springframework.core.convert.ConversionService;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
 
@@ -50,6 +50,9 @@ public class Application implements Runnable {
 
     private final AirportRegistry airports;
     private final FlightCatalog flights;
+
+    @Autowired
+    ConversionService conversion;
 
     @Autowired
     public Application(AirportRegistry airports, FlightCatalog flights) {
@@ -149,19 +152,7 @@ public class Application implements Runnable {
                 try {
                     boolean found = false;
                     for (Connection connection : flights.findConnections(airports.getAirport(departure), airports.getAirport(destination), maxStops)) {
-                        boolean first = true;
-                        for (Flight flight : connection) {
-                            if (first) {
-                                System.out.print(flight.getFrom().getIataCode());
-                                first = false;
-                            }
-                            System.out.print(' ');
-                            System.out.print(flight.getCarrier().getIataCode());
-                            System.out.print(String.valueOf(flight.getNumber()));
-                            System.out.print(' ');
-                            System.out.print(flight.getTo().getIataCode());
-                        }
-                        System.out.println();
+                        System.out.println(conversion.convert(connection, String.class));
                         found = true;
                     }
                     if (!found) {
