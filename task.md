@@ -1,8 +1,15 @@
-For each task there is a branch with a start tag on it. Check out the desired branch for the task you want to start
-using the start tag.
+Task 1
+------
 
-This file will be replaced by a description of the task to do. One possible solution is done on the branch and merged
-back to `master` before the next task branch starts. So you can have a look on it switching to the next branch start tag
-or simple switch the branch in the _github_ browser to see the next task in this file and going on with your code.
+Make the services independent and more easy to test.
 
-Checkout branch `task-1` at tag `start-1`…
+Setup `AirportRegistry` and `FlightCatalog` with very few airports and flights in the unit tests. Do not use the
+`airports.csv` or `flights.csv` file in test but in production setup. Extract data import from constructor to an own
+method. Handle errors on import by log and skip. Make the tests independent, use a mock for the `FlightCatalog` test.
+
+Tips:
+
+* inject the data resource, a simple `InputStream` will work
+* use inline data for the test to make it more easy to verify
+  (`LH,FRA,LHR` and `AB,LHR,MIA` should work for most test cases)
+* the [Mockito](http://docs.mockito.googlecode.com/hg/latest/org/mockito/Mockito.html) framework is available
