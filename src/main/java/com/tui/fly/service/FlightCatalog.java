@@ -34,25 +34,15 @@ public class FlightCatalog {
     public void loadData() throws IOException {
         this.flights = new ArrayList<>();
         int no = 0;
-        try (InputStream in = data) {
-            BufferedReader reader = new BufferedReader(new InputStreamReader(in, Charset.forName("UTF-8")));
-            String row;
-            while (true) {
-                row = reader.readLine();
-                if (row == null) {
-                    break;
-                }
-                String[] columns = row.trim().split(" *, *");
-                if (columns.length == 3) {
-                    Flight flight = new Flight(airline(columns[0]), 100 + no++);
-                    flight.setFrom(airports.getAirport(columns[1]));
-                    flight.setTo(airports.getAirport(columns[2]));
-                    flights.add(flight);
-                }
+        for (String[] columns : new CsvReader(data)) {
+            if (columns.length == 3) {
+                Flight flight = new Flight(airline(columns[0]), 100 + no++);
+                flight.setFrom(airports.getAirport(columns[1]));
+                flight.setTo(airports.getAirport(columns[2]));
+                flights.add(flight);
             }
         }
         log.info("Read {} flights", flights.size());
-
     }
 
     public Set<Airport> findDestinations(Airport departure, int maxStops) {
