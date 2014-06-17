@@ -12,7 +12,9 @@ Tips:
 * add the following dependencies:
   _compile_ `org.springframework:spring-context-support:4.0.3.RELEASE`
   _runtime_ `org.springframework:spring-aop:4.0.3.RELEASE`
+  _testCompile_ `org.springframework:spring-test:4.0.3.RELEASE`
 * implement `InitializingBean` to load the data
 * also offer setters instead of resource loading in the services to simplify tests, ensure proper initialization anyway
 * use the `Resource` interface, in fact the `ClassPathResource` implementation for data injection
 * use the `GenericXmlApplicationContext` implementation for loading the beans
+* create a Spring context loading test using `AbstractJUnit4SpringContextTests`
