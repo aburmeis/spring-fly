@@ -5,6 +5,8 @@ import com.tui.fly.domain.Connection;
 import com.tui.fly.domain.Flight;
 import com.tui.fly.service.AirportRegistry;
 import com.tui.fly.service.FlightCatalog;
+import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.support.GenericXmlApplicationContext;
 import org.springframework.core.io.ClassPathResource;
 
 import java.io.BufferedReader;
@@ -15,24 +17,26 @@ import java.util.NoSuchElementException;
 public class Application implements Runnable {
 
     public static void main(String... args) {
-        new Application().run();
+        ConfigurableApplicationContext context = createXmlContext();
+        context.refresh();
+        Application application = context.getBean(Application.class);
+        application.run();
+        context.close();
     }
 
-    private AirportRegistry airports;
-    private FlightCatalog flights;
-
-    private Application() {
-        try {
-            airports = new AirportRegistry(new ClassPathResource("airports.csv"));
-            airports.afterPropertiesSet();
-            flights = new FlightCatalog(airports, new ClassPathResource("flights.csv"));
-            flights.afterPropertiesSet();
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.exit(-1);
-        }
+    private static ConfigurableApplicationContext createXmlContext() {
+        GenericXmlApplicationContext context = new GenericXmlApplicationContext();
+        context.load(new ClassPathResource("context.xml"));
+        return context;
     }
 
+    private final AirportRegistry airports;
+    private final FlightCatalog flights;
+
+    public Application(AirportRegistry airports, FlightCatalog flights) {
+        this.airports = airports;
+        this.flights = flights;
+    }
 
     @Override
     public void run() {
