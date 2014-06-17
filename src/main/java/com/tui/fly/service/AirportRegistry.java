@@ -6,7 +6,10 @@ import com.tui.fly.domain.Location;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.io.Resource;
+import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.HashSet;
@@ -17,13 +20,15 @@ import static com.tui.fly.domain.Airport.airport;
 import static java.lang.Double.parseDouble;
 import static java.util.Arrays.asList;
 
+@Service
 public class AirportRegistry implements InitializingBean {
 
     private final Logger log = LoggerFactory.getLogger(getClass());
     private final Resource data;
     private Set<Airport> airports;
 
-    public AirportRegistry(Resource data) {
+    @Autowired
+    public AirportRegistry(@Qualifier("airportData") Resource data) {
         this.data = data;
     }
 

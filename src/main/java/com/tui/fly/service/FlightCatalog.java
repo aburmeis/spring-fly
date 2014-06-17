@@ -6,7 +6,10 @@ import com.tui.fly.domain.Flight;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.io.Resource;
+import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.*;
@@ -14,6 +17,7 @@ import java.util.*;
 import static com.tui.fly.domain.Airline.airline;
 import static java.util.Arrays.asList;
 
+@Service
 public class FlightCatalog implements InitializingBean {
 
     private final Logger log = LoggerFactory.getLogger(getClass());
@@ -21,7 +25,8 @@ public class FlightCatalog implements InitializingBean {
     private List<Flight> flights;
     private final Resource data;
 
-    public FlightCatalog(AirportRegistry airports, Resource data) {
+    @Autowired
+    public FlightCatalog(AirportRegistry airports, @Qualifier("flightData") Resource data) {
         this.airports = airports;
         this.data = data;
     }
