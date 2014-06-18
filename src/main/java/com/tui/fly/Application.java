@@ -1,24 +1,22 @@
 package com.tui.fly;
 
-import com.tui.fly.domain.Airport;
-import com.tui.fly.domain.Connection;
-import com.tui.fly.service.AirportRegistry;
-import com.tui.fly.service.FlightCatalog;
+import com.tui.fly.cli.Command;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.support.GenericXmlApplicationContext;
-import org.springframework.core.convert.ConversionService;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.NoSuchElementException;
+import java.util.Map;
 
 @Component
-public class Application implements Runnable {
+public class Application implements Runnable, InitializingBean {
 
     public static void main(String... args) {
         boolean useXml = false;
@@ -48,16 +46,14 @@ public class Application implements Runnable {
         return context;
     }
 
-    private final AirportRegistry airports;
-    private final FlightCatalog flights;
-
     @Autowired
-    ConversionService conversion;
+    private ApplicationContext context;
 
-    @Autowired
-    public Application(AirportRegistry airports, FlightCatalog flights) {
-        this.airports = airports;
-        this.flights = flights;
+    Map<String, Command> commands;
+
+    @Override
+    public void afterPropertiesSet() {
+        commands = context.getBeansOfType(Command.class);
     }
 
     @Override
@@ -72,99 +68,22 @@ public class Application implements Runnable {
                 }
                 String[] words = line.split(" +");
                 if (words.length > 0) {
-                    String command = words[0];
-                    switch (command) {
-                        case "airports":
-                            doAirports();
-                            break;
-                        case "destinations": {
-                            doDestinations(words);
-                            break;
+                    Command command = commands.get(words[0]);
+                    if (command == null) {
+                        System.err.println("unknown command " + words[0]);
+                        System.out.println("Commands: " + commands.keySet());
+                    } else {
+                        try {
+                            System.out.println(command.execute(words));
+                        } catch (Exception e) {
+                            System.err.println("Error executing command " + words[0] + ": " + e.getMessage());
                         }
-                        case "connections": {
-                            doConnections(words);
-                            break;
-                        }
-                        default:
-                            System.err.println("unknown command " + command);
-                            System.out.println("Commands: airports, destinations, connections");
-                            break;
                     }
                 }
             } catch (IOException e) {
                 e.printStackTrace();
                 return;
             }
-        }
-    }
-
-    private void doAirports() {
-        boolean first = true;
-        for (Airport airport : airports.findAirports()) {
-            if (first) {
-                first = false;
-            } else {
-                System.out.print(',');
-            }
-            System.out.print(airport.getIataCode());
-        }
-        System.out.println();
-    }
-
-    private void doDestinations(String[] words) {
-        String departure;
-        int maxStops = 0;
-        switch (words.length) {
-            case 3:
-                maxStops = Integer.parseInt(words[2]);
-            case 2:
-                departure = words[1];
-                try {
-                    boolean first = true;
-                    for (Airport airport : flights.findDestinations(airports.getAirport(departure), maxStops)) {
-                        if (first) {
-                            first = false;
-                        } else {
-                            System.out.print(',');
-                        }
-                        System.out.print(airport.getIataCode());
-                    }
-                    System.out.println();
-                } catch (NoSuchElementException unknown) {
-                    System.err.println(unknown.getMessage());
-                }
-                break;
-            default:
-                System.err.println("Usage: destinations <departureAirport> [<maxStops>]");
-                break;
-        }
-    }
-
-    private void doConnections(String[] words) {
-        String departure, destination;
-        int maxStops = 1;
-        switch (words.length) {
-            case 4:
-                maxStops = Integer.parseInt(words[3]);
-            case 3:
-                departure = words[1];
-                destination = words[2];
-                try {
-                    boolean found = false;
-                    for (Connection connection : flights.findConnections(airports.getAirport(departure), airports.getAirport(destination), maxStops)) {
-                        System.out.println(conversion.convert(connection, String.class));
-                        found = true;
-                    }
-                    if (!found) {
-                        System.err.println("No connections");
-                    }
-                } catch (NoSuchElementException unknown) {
-                    System.err.println(unknown.getMessage());
-                }
-                break;
-            default:
-                System.err.println("Usage: connections <departureAirport> <destinationAirport> [<maxStops>]");
-                break;
         }
     }
 }
