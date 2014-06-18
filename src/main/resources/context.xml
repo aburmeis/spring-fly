@@ -4,14 +4,25 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd"
        default-autowire="no">
 
-    <bean id="airports" class="com.tui.fly.service.AirportRegistry"/>
+    <bean class="com.tui.fly.cli.AirportsCommand">
+        <constructor-arg ref="airports"/>
+    </bean>
 
-    <bean id="flights" class="com.tui.fly.service.FlightCatalog"/>
-
-    <bean class="com.tui.fly.Application">
+    <bean class="com.tui.fly.cli.ConnectionsCommand">
         <constructor-arg ref="airports"/>
         <constructor-arg ref="flights"/>
     </bean>
+
+    <bean class="com.tui.fly.cli.DestinationsCommand">
+        <constructor-arg ref="airports"/>
+        <constructor-arg ref="flights"/>
+    </bean>
+
+    <bean class="com.tui.fly.Application"/>
+    
+    <bean id="airports" class="com.tui.fly.service.AirportRegistry"/>
+
+    <bean id="flights" class="com.tui.fly.service.FlightCatalog"/>
 
     <bean id="airportData" class="org.springframework.core.io.ClassPathResource">
         <constructor-arg value="airports.csv"/>
