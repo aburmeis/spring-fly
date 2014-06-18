@@ -1,13 +1,12 @@
-Task 4
+Task 5
 ------
 
-Unique conversion
+Dynamic binding
 
-Conversions are spread all over the code base. Spring has a `ConversionService` to do this centralized but extensible.
-Use the service in the application to convert connections to strings.
+Refactor the application and introduce three command beans. Invoke the command by its bean name.
 
 Tips:
 
-* write and test the converter implementing the `Converter` interface
-* register them in the configuration using a `ConversionServiceFactoryBean`
-* `ConversionService` is provided by Spring, just use it autowired!
+* make the commands `@Component`s implementing an own `Command` interface
+* inject the dependencies into the commands not the application 
+* inject the `ApplicationContext` into the application bean and get all commands out of the context
