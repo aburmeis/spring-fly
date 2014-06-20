@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +19,7 @@ import static com.tui.fly.domain.Airline.airline;
 import static java.util.Arrays.asList;
 
 @Service
+@Profile("memory")
 public class FlightCatalog implements InitializingBean {
 
     private final Logger log = LoggerFactory.getLogger(getClass());

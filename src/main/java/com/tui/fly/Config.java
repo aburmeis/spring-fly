@@ -5,6 +5,7 @@ import org.springframework.beans.factory.FactoryBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.context.support.ConversionServiceFactoryBean;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.core.convert.converter.Converter;
@@ -19,11 +20,13 @@ import java.util.Set;
 class Config {
 
     @Bean
+    @Profile("memory")
     public Resource flightData() {
         return new ClassPathResource("flights.csv");
     }
 
     @Bean
+    @Profile("memory")
     public Resource airportData() {
         return new ClassPathResource("airports.csv");
     }

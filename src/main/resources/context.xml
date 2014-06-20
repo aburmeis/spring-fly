@@ -20,18 +20,6 @@
 
     <bean class="com.tui.fly.Application"/>
     
-    <bean id="airports" class="com.tui.fly.service.AirportRegistry"/>
-
-    <bean id="flights" class="com.tui.fly.service.FlightCatalog"/>
-
-    <bean id="airportData" class="org.springframework.core.io.ClassPathResource">
-        <constructor-arg value="airports.csv"/>
-    </bean>
-
-    <bean id="flightData" class="org.springframework.core.io.ClassPathResource">
-        <constructor-arg value="flights.csv"/>
-    </bean>
-
     <bean id="conversionService" class="org.springframework.context.support.ConversionServiceFactoryBean">
         <property name="converters">
             <set>
@@ -39,5 +27,21 @@
             </set>
         </property>
     </bean>
+
+    <beans profile="memory">
+
+        <bean id="airports" class="com.tui.fly.service.AirportRegistry"/>
+
+        <bean id="flights" class="com.tui.fly.service.FlightCatalog"/>
+
+        <bean id="airportData" class="org.springframework.core.io.ClassPathResource">
+            <constructor-arg value="airports.csv"/>
+        </bean>
+
+        <bean id="flightData" class="org.springframework.core.io.ClassPathResource">
+            <constructor-arg value="flights.csv"/>
+        </bean>
+
+    </beans>
 
 </beans>
