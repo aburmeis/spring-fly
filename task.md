@@ -1,12 +1,12 @@
-Task 5
+Task 6
 ------
 
-Dynamic binding
+Use a profile
 
-Refactor the application and introduce three command beans. Invoke the command by its bean name.
+Create a profile _memory_ and move the current services to that profile only
 
 Tips:
 
-* make the commands `@Component`s implementing an own `Command` interface
-* inject the dependencies into the commands not the application 
-* inject the `ApplicationContext` into the application bean and get all commands out of the context
+* add `@Profile` to the desired components
+* `@ActiveProfile` selects profiles to be used for Spring based tests
+* use the environment of the `ConfigurableApplicationContext` to select a profile in production
