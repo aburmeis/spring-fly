@@ -9,8 +9,7 @@ import java.util.NoSuchElementException;
 
 import static com.tui.fly.domain.Airport.airport;
 import static com.tui.fly.domain.Country.country;
-import static org.hamcrest.CoreMatchers.hasItems;
-import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
 
 public class AirportRegistryTest {
@@ -25,6 +24,12 @@ public class AirportRegistryTest {
     public void knownAirportIsFound() throws IOException {
         assertThat(createRegistry("FRA\nLHR\nJFK").getAirport("LHR").getIataCode(),
                 is("LHR"));
+    }
+
+    @Test
+    public void airportsAreFoundByCountry() throws IOException {
+        assertThat(createRegistry("FRA,Frankfurt,DE\nLHR,London,UK\nBER,Berlin,DE").findAirports(country("DE")),
+                allOf(hasItems(airport("FRA"), airport("BER")), not(hasItem(airport("LHR")))));
     }
 
     @Test

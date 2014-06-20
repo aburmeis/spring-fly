@@ -33,6 +33,10 @@ public final class Country implements Serializable {
         return country(isoCode);
     }
 
+    public String getIsoCode() {
+        return isoCode;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

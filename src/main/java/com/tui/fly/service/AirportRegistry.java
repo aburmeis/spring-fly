@@ -52,6 +52,16 @@ public class AirportRegistry implements InitializingBean {
         return airports;
     }
 
+    public Set<Airport> findAirports(Country country) {
+        HashSet<Airport> airportsOfCountry = new HashSet<>();
+        for (Airport candidate : airports) {
+            if (country.equals(candidate.getCountry())) {
+                airportsOfCountry.add(candidate);
+            }
+        }
+        return airportsOfCountry;
+    }
+
     public Airport getAirport(String iataCode) {
         Airport airport = airport(iataCode);
         if (!airports.contains(airport)) {
