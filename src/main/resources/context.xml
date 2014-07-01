@@ -44,4 +44,27 @@
 
     </beans>
 
+    <beans profile="relational">
+
+        <bean id="database" class="org.springframework.jdbc.datasource.SimpleDriverDataSource">
+            <property name="driverClass" value="org.hsqldb.jdbc.JDBCDriver"/>
+            <property name="url" value="jdbc:hsqldb:mem:mymemdb"/>
+            <property name="username" value="SA"/>
+            <property name="password" value=""/>
+        </bean>
+
+        <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+            <constructor-arg ref="database"/>
+        </bean>
+
+        <bean id="jdbc" class="org.springframework.jdbc.core.JdbcTemplate">
+            <constructor-arg ref="database"/>
+        </bean>
+
+        <bean id="airports" class="com.tui.fly.service.DatabaseAirportRegistry"/>
+
+        <bean id="flights" class="com.tui.fly.service.DatabaseFlightCatalog"/>
+
+    </beans>
+
 </beans>
