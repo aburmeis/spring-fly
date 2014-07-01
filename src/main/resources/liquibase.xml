@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="create-airport" author="arne.burmeister">
+        <createTable tableName="airport">
+            <column name="iata_code" type="char(3)">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="country" type="varchar(2)"/>
+            <column name="latitude" type="number(12,8)"/>
+            <column name="longitude" type="number(12,8)"/>
+        </createTable>
+        <loadData tableName="airport" file="airports.csv" separator=",">
+            <column index="0" name="iata_code" type="STRING"/>
+            <column index="1" type="SKIP"/>
+            <column index="2" name="country" type="STRING"/>
+            <column index="3" name="latitude" type="NUMERIC"/>
+            <column index="4" name="longitude" type="NUMERIC"/>
+        </loadData>
+    </changeSet>
+    <changeSet id="create-flight" author="arne.burmeister">
+        <createTable tableName="flight">
+            <column name="carrier" type="char(2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="flight_no" type="number(5,0)" autoIncrement="true" startWith="100">
+                <constraints nullable="false"/>
+            </column>
+            <column name="departure" type="char(3)">
+                <constraints nullable="false" foreignKeyName="fk_flight_departure" referencedTableName="airport" referencedColumnNames="iata_code"/>
+            </column>
+            <column name="destination" type="char(3)">
+                <constraints nullable="false" foreignKeyName="fk_flight_destination" referencedTableName="airport" referencedColumnNames="iata_code"/>
+            </column>
+        </createTable>
+        <loadData tableName="flight" file="flights.csv" separator=",">
+            <column index="0" name="carrier" type="STRING"/>
+            <column name="flight_no" type="COMPUTED"/>
+            <column index="1" name="departure" type="STRING"/>
+            <column index="2" name="destination" type="STRING"/>
+        </loadData>
+    </changeSet>
+</databaseChangeLog>

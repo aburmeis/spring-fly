@@ -65,6 +65,11 @@
 
         <bean id="flights" class="com.tui.fly.service.DatabaseFlightCatalog"/>
 
+        <bean id="liquibase" class="liquibase.integration.spring.SpringLiquibase">
+            <property name="dataSource" ref="database"/>
+            <property name="changeLog" value="classpath:liquibase.xml"/>
+        </bean>
+
     </beans>
 
 </beans>
