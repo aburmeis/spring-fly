@@ -6,6 +6,7 @@ import com.tui.fly.domain.Flight;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.Profile;
 import org.springframework.jdbc.core.JdbcOperations;
 import org.springframework.jdbc.core.RowMapper;
@@ -34,6 +35,7 @@ class DatabaseFlightCatalog implements FlightCatalog {
 
     @Override
     @Transactional(readOnly = true)
+    @Cacheable(value = "destinations", condition = "#maxStops < 2")
     public Set<Airport> findDestinations(Airport departure, int maxStops) {
         Set<Airport> destinations = new LinkedHashSet<>(jdbc.query("SELECT destination FROM flight WHERE departure = ?", new Object[] {departure.getIataCode()}, new DestinationMapper()));
         if (maxStops > 0) {
@@ -47,6 +49,7 @@ class DatabaseFlightCatalog implements FlightCatalog {
 
     @Override
     @Transactional(readOnly = true)
+    @Cacheable(value = "connections", condition = "#maxStops < 2")
     public List<Connection> findConnections(Airport departure, Airport destination, int maxStops) {
         List<Connection> connections = new ArrayList<>();
         for (Flight direct : jdbc.query("SELECT * FROM flight WHERE departure = ? AND destination = ?", new Object[] {departure.getIataCode(), destination.getIataCode()}, new FlightMapper())) {

@@ -5,6 +5,7 @@ import com.tui.fly.domain.Country;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.Profile;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcOperations;
@@ -51,6 +52,7 @@ class DatabaseAirportRegistry implements AirportRegistry {
 
     @Override
     @Transactional(readOnly = true)
+    @Cacheable(value = "airports")
     public Airport getAirport(String iataCode) {
         try {
             return jdbc.queryForObject("SELECT * FROM airport WHERE iata_code = ?", new Object[]{iataCode}, new AirportMapper());

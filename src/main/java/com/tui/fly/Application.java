@@ -79,17 +79,18 @@ public class Application implements Runnable, InitializingBean {
                     return;
                 }
                 String[] words = line.split(" +");
-                if (words.length > 0) {
-                    Command command = commands.get(words[0]);
-                    if (command == null) {
-                        System.err.println("unknown command " + words[0]);
-                        System.out.println("Commands: " + commands.keySet());
-                    } else {
-                        try {
-                            System.out.println(command.execute(words));
-                        } catch (Exception e) {
-                            System.err.println("Error executing command " + words[0] + ": " + e.getMessage());
-                        }
+                if (words.length == 0) {
+                    return;
+                }
+                Command command = commands.get(words[0]);
+                if (command == null) {
+                    System.err.println("unknown command " + words[0]);
+                    System.out.println("Commands: " + commands.keySet());
+                } else {
+                    try {
+                        System.out.println(command.execute(words));
+                    } catch (Exception e) {
+                        System.err.println("Error executing command " + words[0] + ": " + e.getMessage());
                     }
                 }
             } catch (IOException e) {
