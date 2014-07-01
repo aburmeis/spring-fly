@@ -63,6 +63,7 @@ class InMemoryAirportRegistry implements InitializingBean, AirportRegistry {
                 airportsOfCountry.add(candidate);
             }
         }
+        log.debug("Found {} airports in {}", airportsOfCountry.size(), country);
         return airportsOfCountry;
     }
 

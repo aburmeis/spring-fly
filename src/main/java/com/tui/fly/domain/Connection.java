@@ -1,5 +1,6 @@
 package com.tui.fly.domain;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -24,6 +25,21 @@ public final class Connection implements Iterable<Flight> {
         this.flights = flights;
     }
 
+    public Connection(Connection... connections) {
+        flights = new ArrayList<>();
+        for (Connection connection : connections) {
+            flights.addAll(connection.flights);
+        }
+    }
+
+    public Airport getFrom() {
+        return flights.get(0).getFrom();
+    }
+
+    public Airport getTo() {
+        return flights.get(flights.size() - 1).getTo();
+    }
+
     @Override
     public Iterator<Flight> iterator() {
         return flights.iterator();
@@ -38,7 +54,7 @@ public final class Connection implements Iterable<Flight> {
             return false;
         }
 
-        Connection flights1 = (Connection)o;
+        Connection flights1 = (Connection) o;
 
         if (!flights.equals(flights1.flights)) {
             return false;

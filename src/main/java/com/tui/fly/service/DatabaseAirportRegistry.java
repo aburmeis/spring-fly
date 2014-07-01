@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
@@ -36,13 +37,16 @@ class DatabaseAirportRegistry implements AirportRegistry {
     @Override
     @Transactional(readOnly = true)
     public Set<Airport> findAirports() {
-        return new LinkedHashSet<>(jdbc.query("SELECT * FROM airport", new AirportMapper()));
+        List<Airport> airports = jdbc.query("SELECT * FROM airport", new AirportMapper());
+        return new LinkedHashSet<>(airports);
     }
 
     @Override
     @Transactional(readOnly = true)
     public Set<Airport> findAirports(Country country) {
-        return new LinkedHashSet<>(jdbc.query("SELECT * FROM airport WHERE country = ?", new Object[]{country.getIsoCode()}, new AirportMapper()));
+        List<Airport> airportsOfCountry = jdbc.query("SELECT * FROM airport WHERE country = ?", new Object[]{country.getIsoCode()}, new AirportMapper());
+        log.debug("Found {} airports in {}", airportsOfCountry.size(), country);
+        return new LinkedHashSet<>(airportsOfCountry);
     }
 
     @Override
