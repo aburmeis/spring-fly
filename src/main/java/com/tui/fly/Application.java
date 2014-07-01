@@ -13,35 +13,47 @@ import org.springframework.stereotype.Component;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
+
+import static java.util.Arrays.asList;
+import static org.springframework.util.StringUtils.collectionToDelimitedString;
 
 @Component
 public class Application implements Runnable, InitializingBean {
 
+    static final Set<String> VALID_PROFILES = new HashSet<>(asList("memory", "relational"));
+
     public static void main(String... args) {
         boolean useXml = false;
+        String profile = "memory";
         for (String arg : args) {
             if ("-xml".equals(arg)) {
                 useXml = true;
+            } else if (VALID_PROFILES.contains(arg)) {
+                profile = arg;
             } else {
-                System.err.println("Usage: [-xml]");
+                System.err.println("Usage: [-xml] " + collectionToDelimitedString(VALID_PROFILES, "|", "[", "]"));
             }
         }
-        ConfigurableApplicationContext context = useXml ? createXmlContext() : createAnnoationContext();
+        ConfigurableApplicationContext context = useXml ? createXmlContext(profile) : createAnnoationContext(profile);
         context.refresh();
         Application application = context.getBean(Application.class);
         application.run();
         context.close();
     }
 
-    private static ConfigurableApplicationContext createAnnoationContext() {
+    private static ConfigurableApplicationContext createAnnoationContext(String profile) {
         AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext();
+        context.getEnvironment().setActiveProfiles(profile);
         context.register(Config.class);
         return context;
     }
 
-    private static ConfigurableApplicationContext createXmlContext() {
+    private static ConfigurableApplicationContext createXmlContext(String profile) {
         GenericXmlApplicationContext context = new GenericXmlApplicationContext();
+        context.getEnvironment().setActiveProfiles(profile);
         context.load(new ClassPathResource("context.xml"));
         return context;
     }

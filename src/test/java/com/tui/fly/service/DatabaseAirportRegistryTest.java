@@ -27,7 +27,7 @@ public class DatabaseAirportRegistryTest {
     public static final Airport LHR = airport("LHR");
     public static final Country GERMANY = country("DE");
 
-    private DatabaseAirportRegistry repository;
+    private DatabaseAirportRegistry registry;
     private JdbcOperations jdbc;
 
     @Test
@@ -35,7 +35,7 @@ public class DatabaseAirportRegistryTest {
         when(jdbc.query(anyString(), any(RowMapper.class)))
                 .thenReturn(asList(FRA, LHR));
 
-        assertThat(repository.findAirports(), hasItems(FRA, LHR));
+        assertThat(registry.findAirports(), hasItems(FRA, LHR));
 
         verify(jdbc).query(anyString(), any(RowMapper.class));
     }
@@ -45,7 +45,7 @@ public class DatabaseAirportRegistryTest {
         when(jdbc.query(anyString(), any(Object[].class), any(RowMapper.class)))
                 .thenReturn(asList(FRA));
 
-        assertThat(repository.findAirports(GERMANY), hasItems(FRA));
+        assertThat(registry.findAirports(GERMANY), hasItems(FRA));
 
         verify(jdbc).query(anyString(), aryEq(new Object[]{GERMANY.getIsoCode()}), any(RowMapper.class));
     }
@@ -55,7 +55,7 @@ public class DatabaseAirportRegistryTest {
         when(jdbc.queryForObject(anyString(), any(Object[].class), any(RowMapper.class)))
                 .thenReturn(FRA);
 
-        assertThat(repository.getAirport(FRA.getIataCode()), is(FRA));
+        assertThat(registry.getAirport(FRA.getIataCode()), is(FRA));
 
         verify(jdbc).queryForObject(anyString(), aryEq(new Object[]{FRA.getIataCode()}), any(RowMapper.class));
     }
@@ -65,12 +65,12 @@ public class DatabaseAirportRegistryTest {
         when(jdbc.queryForObject(anyString(), any(Object[].class), any(RowMapper.class)))
                 .thenThrow(new IncorrectResultSizeDataAccessException(1, 0));
 
-        repository.getAirport("NIX");
+        registry.getAirport("NIX");
     }
 
     @Before
     public void createRepository() {
         jdbc = mock(JdbcOperations.class);
-        repository = new DatabaseAirportRegistry(jdbc);
+        registry = new DatabaseAirportRegistry(jdbc);
     }
 }
