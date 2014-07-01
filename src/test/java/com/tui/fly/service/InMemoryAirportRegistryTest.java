@@ -12,7 +12,7 @@ import static com.tui.fly.domain.Country.country;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
 
-public class AirportRegistryTest {
+public class InMemoryAirportRegistryTest {
 
     @Test
     public void airportsAreRegistered() throws IOException {
@@ -51,7 +51,7 @@ public class AirportRegistryTest {
     }
 
     private AirportRegistry createRegistry(String data) throws IOException {
-        AirportRegistry registry = new AirportRegistry(new ByteArrayResource(data.getBytes("UTF-8")));
+        InMemoryAirportRegistry registry = new InMemoryAirportRegistry(new ByteArrayResource(data.getBytes("UTF-8")));
         registry.afterPropertiesSet();
         return registry;
     }

@@ -21,9 +21,9 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.when;
 
-public class FlightCatalogTest {
+public class InMemoryFlightCatalogTest {
 
-    private FlightCatalog flights;
+    private InMemoryFlightCatalog flights;
 
     @Test
     public void directDestinationsAreFound() throws IOException {
@@ -63,7 +63,7 @@ public class FlightCatalogTest {
 
     @Test
     public void invalidDataIsSkipped() throws IOException {
-        AirportRegistry airports = Mockito.mock(AirportRegistry.class);
+        AirportRegistry airports = Mockito.mock(InMemoryAirportRegistry.class);
         when(airports.getAirport(anyString()))
                 .thenAnswer(new Answer<Airport>() {
                     @Override
@@ -75,14 +75,14 @@ public class FlightCatalogTest {
                         throw new NoSuchElementException("mock");
                     }
                 });
-        flights = new FlightCatalog(airports, new ByteArrayResource("LH,FRA,LHR\nAB,LHR,MIA\nU,FRA,LHR".getBytes("UTF-8")));
+        flights = new InMemoryFlightCatalog(airports, new ByteArrayResource("LH,FRA,LHR\nAB,LHR,MIA\nU,FRA,LHR".getBytes("UTF-8")));
         flights.afterPropertiesSet();
         assertThat(flights.findDestinations(airport("FRA"), 1).size(), is(1));
     }
 
     @Before
     public void createCatalog() throws IOException {
-        AirportRegistry airports = Mockito.mock(AirportRegistry.class);
+        AirportRegistry airports = Mockito.mock(InMemoryAirportRegistry.class);
         when(airports.getAirport(anyString()))
                 .thenAnswer(new Answer<Airport>() {
                     @Override
@@ -90,7 +90,7 @@ public class FlightCatalogTest {
                         return airport((String) invocation.getArguments()[0]);
                     }
                 });
-        flights = new FlightCatalog(airports, new ByteArrayResource("LH,FRA,LHR\nAB,LHR,MIA".getBytes("UTF-8")));
+        flights = new InMemoryFlightCatalog(airports, new ByteArrayResource("LH,FRA,LHR\nAB,LHR,MIA".getBytes("UTF-8")));
         flights.afterPropertiesSet();
     }
 

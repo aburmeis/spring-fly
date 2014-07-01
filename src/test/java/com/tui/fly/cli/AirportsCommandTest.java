@@ -13,7 +13,6 @@ import static com.tui.fly.domain.Country.country;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Matchers.contains;
 import static org.mockito.Matchers.eq;
 
 public class AirportsCommandTest {

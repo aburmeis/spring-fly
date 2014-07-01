@@ -30,9 +30,9 @@
 
     <beans profile="memory">
 
-        <bean id="airports" class="com.tui.fly.service.AirportRegistry"/>
+        <bean id="airports" class="com.tui.fly.service.InMemoryAirportRegistry"/>
 
-        <bean id="flights" class="com.tui.fly.service.FlightCatalog"/>
+        <bean id="flights" class="com.tui.fly.service.InMemoryFlightCatalog"/>
 
         <bean id="airportData" class="org.springframework.core.io.ClassPathResource">
             <constructor-arg value="airports.csv"/>
