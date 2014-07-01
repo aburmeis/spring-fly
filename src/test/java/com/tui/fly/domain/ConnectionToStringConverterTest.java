@@ -13,7 +13,7 @@ public class ConnectionToStringConverterTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void noConnectionWithoutFlights() {
-        converter.convert(new Connection());
+        converter.convert(new Connection(new Flight[0]));
     }
 
     @Test
