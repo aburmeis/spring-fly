@@ -23,6 +23,12 @@ public class CsvReaderTest {
     }
 
     @Test
+    public void nullColumnsAreRecognized() {
+        String[] columns = new CsvReader(new ByteArrayResource("a1,null,a3".getBytes())).iterator().next();
+        assertThat(columns, is(new String[] {"a1", null, "a3"}));
+    }
+
+    @Test
     public void linesStartingWithHashAreComments() {
         int rows = 0;
         for (String[] columns : new CsvReader(new ByteArrayResource("# comment\na1,a2\n#b1,b2\nc1".getBytes()))) {

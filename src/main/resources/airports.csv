@@ -1,59 +1,59 @@
-#IATA code,Name
-AMS,Amsterdam Schiphol
-AYT,Antalya
-ATL,Atlanta,US
-BKK,Bangkok-Suvarnabhumi
+#IATA_code,name,country,latitude,longitude
+AMS,Amsterdam Schiphol,NL,null,null
+AYT,Antalya,TR,null,null
+ATL,Atlanta,US,null,null
+BKK,Bangkok-Suvarnabhumi,TH,null,null
 BCN,Barcelona,ES,41.297078,2.078463
-BOS,Boston,US
+BOS,Boston,US,null,null
 CLT,Charlotte,US,35.214000,-80.943139
-CTU,Chengdu
-ORD,Chicago O’Hare,US
-DFW,Dallas/Fort Worth,US
-DEN,Denver,US
-DTW,Detroit,US
-DXB,Dubai
+CTU,Chengdu,CN,null,null
+ORD,Chicago O’Hare,US,null,null
+DFW,Dallas/Fort Worth,US,null,null
+DEN,Denver,US,null,null
+DTW,Detroit,US,null,null
+DXB,Dubai,AE,null,null
 FRA,Frankfurt am Main,DE,50.026421,8.543125
-CAN,Guangzhou
-HKG,Hongkong
-IAH,Houston,US
-IST,Istanbul-Atatürk
-CGK,Jakarta
-KUL,Kuala Lumpur
-LAS,Las Vegas,US
-LGW,London-Gatwick,UK
+CAN,Guangzhou,CN,null,null
+HKG,Hongkong,HK,null,null
+IAH,Houston,US,null,null
+IST,Istanbul-Atatürk,TR,null,null
+CGK,Jakarta,ID,null,null
+KUL,Kuala Lumpur,MY,null,null
+LAS,Las Vegas,US,null,null
+LGW,London-Gatwick,UK,null,null
 LHR,London-Heathrow,UK,51.477500,-0.461389
 LAX,Los Angeles,US,33.942522,-118.407161
-MAD,Madrid-Barajas,ES
-MNL,Manila
-MEL,Melbourne
-MEX,Mexiko-Stadt
+MAD,Madrid-Barajas,ES,null,null
+MNL,Manila,PH,null,null
+MEL,Melbourne,AU,null,null
+MEX,Mexiko-Stadt,MX,null,null
 MIA,Miami,US,25.793250,-80.290556
-MSP,Minneapolis-Saint Paul,US
-DME,Moskau-Domodedowo
-SVO,Moskau-Scheremetjewo
-MUC,München
-BOM,Mumbai
-DEL,Neu-Delhi-Indira Gandhi
+MSP,Minneapolis-Saint Paul,US,null,null
+DME,Moskau-Domodedowo,RU,null,null
+SVO,Moskau-Scheremetjewo,RU,null,null
+MUC,München,DE,null,null
+BOM,Mumbai,IN,null,null
+DEL,Neu-Delhi-Indira Gandhi,IN,null,null
 JFK,New York-John-F.-Kennedy,US,40.639751,-73.778926
-LGA,New York-LaGuardia,US
-EWR,New York-Newark,US
-MCO,Orlando,US
+LGA,New York-LaGuardia,US,null,null
+EWR,New York-Newark,US,null,null
+MCO,Orlando,US,null,null
 CDG,Paris-Charles de Gaulle,FR,49.009722,2.547778
-ORY,Paris-Orly,FR
-PEK,Peking
-PHL,Philadelphia,US
-PHX,Phoenix,US
-FCO,Rom-Fiumicino
-SFO,San Francisco,US
-GRU,São Paulo-Guarulhos
-SEA,Seattle-Tacoma
-ICN,Seoul-Incheon
-SHA,Shanghai-Hongqiao
-PVG,Shanghai-Pudong
-SZX,Shenzhen
-SIN,Singapur
-SYD,Sydney
-TPE,Taiwan Taoyuan
-HND,Tokio-Haneda
-NRT,Tokio-Narita
-YYZ,Toronto
+ORY,Paris-Orly,FR,null,null
+PEK,Peking,CN,null,null
+PHL,Philadelphia,US,null,null
+PHX,Phoenix,US,null,null
+FCO,Rom-Fiumicino,IT,null,null
+SFO,San Francisco,US,null,null
+GRU,São Paulo-Guarulhos,BR,null,null
+SEA,Seattle-Tacoma,US,null,null
+ICN,Seoul-Incheon,KR,null,null
+SHA,Shanghai-Hongqiao,CN,null,null
+PVG,Shanghai-Pudong,CN,null,null
+SZX,Shenzhen,CN,null,null
+SIN,Singapur,SG,null,null
+SYD,Sydney,AU,null,null
+TPE,Taiwan Taoyuan,TW,null,null
+HND,Tokio-Haneda,JP,null,null
+NRT,Tokio-Narita,JP,null,null
+YYZ,Toronto,CA,null,null

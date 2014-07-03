@@ -55,7 +55,13 @@ class CsvReader implements Iterable<String[]> {
                     if (row.startsWith("#")) {
                         continue;
                     }
-                    return row.split(" *, *");
+                    String[] columns = row.split(" *, *");
+                    for (int c = 0; c < columns.length; ++c) {
+                        if ("null".equals(columns[c])) {
+                            columns[c] = null;
+                        }
+                    }
+                    return columns;
                 }
             } catch (IOException e) {
                 throw new NoSuchElementException("Cannot read next row");
