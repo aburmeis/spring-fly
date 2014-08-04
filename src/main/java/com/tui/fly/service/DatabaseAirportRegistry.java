@@ -39,6 +39,7 @@ class DatabaseAirportRegistry implements AirportRegistry {
     @Transactional(readOnly = true)
     public Set<Airport> findAirports() {
         List<Airport> airports = jdbc.query("SELECT * FROM airport", new AirportMapper());
+        log.debug("Found {} airports", airports.size());
         return new LinkedHashSet<>(airports);
     }
 
@@ -55,7 +56,9 @@ class DatabaseAirportRegistry implements AirportRegistry {
     @Cacheable(value = "airports")
     public Airport getAirport(String iataCode) {
         try {
-            return jdbc.queryForObject("SELECT * FROM airport WHERE iata_code = ?", new Object[]{iataCode}, new AirportMapper());
+            Airport airport = jdbc.queryForObject("SELECT * FROM airport WHERE iata_code = ?", new Object[]{iataCode}, new AirportMapper());
+            log.debug("Found airport {}", airport);
+            return airport;
         } catch (IncorrectResultSizeDataAccessException notFound) {
             throw new NoSuchElementException("Unknown airport " + iataCode);
         }
