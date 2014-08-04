@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ehcache updateCheck="false" monitoring="autodetect">
+    <cache name="airports" maxEntriesLocalHeap="20"/>
+    <cache name="destinations" maxEntriesLocalHeap="10"/>
+    <cache name="connections" maxEntriesLocalHeap="10"/>
+    <defaultCache
+            maxEntriesLocalHeap="100"
+            eternal="false"
+            timeToIdleSeconds="60"
+            timeToLiveSeconds="300"
+            memoryStoreEvictionPolicy="LRU">
+    </defaultCache>
+</ehcache>

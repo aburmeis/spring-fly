@@ -2,6 +2,9 @@ package com.tui.fly;
 
 import com.tui.fly.domain.ConnectionToStringConverter;
 import org.springframework.beans.factory.FactoryBean;
+import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.cache.ehcache.EhCacheCacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -17,6 +20,7 @@ import java.util.Set;
 
 @Configuration
 @ComponentScan("com.tui.fly")
+@EnableCaching
 class Config {
 
     @Bean
@@ -36,6 +40,11 @@ class Config {
         ConversionServiceFactoryBean factory = new ConversionServiceFactoryBean();
         factory.setConverters(getConverters());
         return factory;
+    }
+
+    @Bean
+    public CacheManager cacheManager() {
+        return new EhCacheCacheManager(net.sf.ehcache.CacheManager.newInstance());
     }
 
     public static Set<Converter<?,?>> getConverters() {
