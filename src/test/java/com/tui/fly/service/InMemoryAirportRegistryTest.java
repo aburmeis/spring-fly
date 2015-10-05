@@ -9,7 +9,7 @@ import java.util.NoSuchElementException;
 
 import static com.tui.fly.domain.Airport.airport;
 import static com.tui.fly.domain.Country.country;
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;
 
 public class InMemoryAirportRegistryTest {

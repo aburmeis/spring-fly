@@ -60,6 +60,7 @@ class InMemoryFlightCatalog implements InitializingBean, FlightCatalog {
 
     @Override
     public Set<Airport> findDestinations(Airport departure, int maxStops) {
+        log.info("find destinations from {} with max {} stops", departure, maxStops);
         Set<Airport> destinations = new HashSet<>();
         fillDestinations(departure, maxStops, destinations);
         log.debug("Found {} destinations for {} with up to {} stops", destinations.size(), departure, maxStops);
@@ -79,6 +80,7 @@ class InMemoryFlightCatalog implements InitializingBean, FlightCatalog {
 
     @Override
     public List<Connection> findConnections(Airport departure, Airport destination, int maxStops) {
+        log.info("find connections from {} to {} with max {} stops", departure, destination, maxStops);
         List<Connection> connections = findConnections(Collections.<Flight>emptyList(), departure, destination, maxStops);
         log.debug("Found {} connections from {} to {} with up to {} stops", connections.size(), departure, destination, maxStops);
         return connections;

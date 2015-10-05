@@ -16,7 +16,7 @@ import java.util.NoSuchElementException;
 import static com.tui.fly.domain.Airline.airline;
 import static com.tui.fly.domain.Airport.airport;
 import static java.util.Arrays.asList;
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.when;

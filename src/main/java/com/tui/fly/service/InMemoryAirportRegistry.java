@@ -52,11 +52,13 @@ class InMemoryAirportRegistry implements InitializingBean, AirportRegistry {
 
     @Override
     public Set<Airport> findAirports() {
+        log.info("find all {} airports", airports.size());
         return airports;
     }
 
     @Override
     public Set<Airport> findAirports(Country country) {
+        log.info("find airports by country {}", country);
         HashSet<Airport> airportsOfCountry = new HashSet<>();
         for (Airport candidate : airports) {
             if (country.equals(candidate.getCountry())) {
@@ -69,6 +71,7 @@ class InMemoryAirportRegistry implements InitializingBean, AirportRegistry {
 
     @Override
     public Airport getAirport(String iataCode) {
+        log.info("get airport by IATA code {}", iataCode);
         Airport airport = airport(iataCode);
         if (!airports.contains(airport)) {
             throw new NoSuchElementException("Unknown airport " + iataCode);
@@ -78,11 +81,18 @@ class InMemoryAirportRegistry implements InitializingBean, AirportRegistry {
 
     private Airport parseAirport(String[] columns) {
         Airport airport = airport(columns[0]);
+        if (columns.length > 1) {
+            airport.setName(columns[1]);
+        }
         if (columns.length > 2) {
             airport.setCountry(Country.country(columns[2]));
         }
         if (columns.length > 4) {
-            airport.setLocation(new Location(parseDouble(columns[3]), parseDouble(columns[4])));
+            String latitude = columns[3];
+            String longitude = columns[4];
+            if (latitude != null && longitude != null) {
+                airport.setLocation(new Location(parseDouble(latitude), parseDouble(longitude)));
+            }
         }
         return airport;
     }
