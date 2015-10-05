@@ -10,12 +10,13 @@
                 <constraints primaryKey="true"/>
             </column>
             <column name="country" type="varchar(2)"/>
+            <column name="name" type="varchar(40)"/>
             <column name="latitude" type="number(12,8)"/>
             <column name="longitude" type="number(12,8)"/>
         </createTable>
         <loadData tableName="airport" file="airports.csv" separator=",">
             <column index="0" name="iata_code" type="STRING"/>
-            <column index="1" type="SKIP"/>
+            <column index="1" name="name" type="STRING"/>
             <column index="2" name="country" type="STRING"/>
             <column index="3" name="latitude" type="NUMERIC"/>
             <column index="4" name="longitude" type="NUMERIC"/>
