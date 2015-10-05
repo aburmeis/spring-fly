@@ -2,6 +2,9 @@ package com.tui.fly.service;
 
 import liquibase.integration.spring.SpringLiquibase;
 import org.hsqldb.jdbc.JDBCDriver;
+import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.cache.ehcache.EhCacheCacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -18,6 +21,7 @@ import javax.sql.DataSource;
 @Configuration
 @Profile("relational")
 @EnableTransactionManagement
+@EnableCaching
 class Database {
 
     private DataSource database;
@@ -25,6 +29,11 @@ class Database {
     @PostConstruct
     public void createDatabase() {
         database = new SimpleDriverDataSource(new JDBCDriver(), "jdbc:hsqldb:mem:mymemdb", "SA", "");
+    }
+    
+    @Bean
+    public CacheManager cacheManager() {
+        return new EhCacheCacheManager(net.sf.ehcache.CacheManager.newInstance());
     }
 
     @Bean
@@ -37,7 +46,7 @@ class Database {
         return new DataSourceTransactionManager(database);
     }
 
-    @Bean
+/*    @Bean
     public SpringLiquibase liquibase() {
         SpringLiquibase liquibase = new SpringLiquibase();
         liquibase.setDataSource(database);
@@ -45,4 +54,5 @@ class Database {
         return liquibase;
 
     }
+    */
 }

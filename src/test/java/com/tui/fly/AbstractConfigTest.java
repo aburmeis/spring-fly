@@ -1,16 +1,27 @@
 package com.tui.fly;
 
 import org.junit.Test;
-import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
 
-import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.assertThat;
 
-public abstract class AbstractConfigTest extends AbstractJUnit4SpringContextTests {
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(classes = Config.class)
+@WebAppConfiguration
+public abstract class AbstractConfigTest {
+    
+    @Autowired
+    private ApplicationContext applicationContext;
 
     @Test
     public void contextIsFullyConfigured() {
         Application application = applicationContext.getBean(Application.class);
-        assertThat(application.commands.size(), is(3));
+        assertThat(application, notNullValue());
     }
 }

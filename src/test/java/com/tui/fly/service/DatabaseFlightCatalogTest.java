@@ -11,7 +11,7 @@ import org.springframework.jdbc.core.RowMapper;
 import static com.tui.fly.domain.Airline.airline;
 import static com.tui.fly.domain.Airport.airport;
 import static java.util.Arrays.asList;
-import static org.hamcrest.CoreMatchers.hasItems;
+import static org.hamcrest.Matchers.hasItems;
 import static org.junit.Assert.assertThat;
 import static org.mockito.AdditionalMatchers.aryEq;
 import static org.mockito.Matchers.any;
