@@ -20,7 +20,7 @@ import java.util.*;
 import static com.tui.fly.domain.Airline.airline;
 
 @Repository
-@Profile("relational")
+@Profile("database")
 class DatabaseFlightCatalog implements FlightCatalog {
 
     private final Logger log = LoggerFactory.getLogger(getClass());

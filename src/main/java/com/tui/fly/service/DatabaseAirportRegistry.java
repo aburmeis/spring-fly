@@ -24,7 +24,7 @@ import static com.tui.fly.domain.Airport.airport;
 import static com.tui.fly.domain.Country.country;
 
 @Repository
-@Profile("relational")
+@Profile("database")
 class DatabaseAirportRegistry implements AirportRegistry {
 
     private final Logger log = LoggerFactory.getLogger(getClass());

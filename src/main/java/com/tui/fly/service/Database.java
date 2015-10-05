@@ -19,7 +19,7 @@ import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
 
 @Configuration
-@Profile("relational")
+@Profile("database")
 @EnableTransactionManagement
 @EnableCaching
 class Database {
@@ -46,7 +46,7 @@ class Database {
         return new DataSourceTransactionManager(database);
     }
 
-/*    @Bean
+    @Bean
     public SpringLiquibase liquibase() {
         SpringLiquibase liquibase = new SpringLiquibase();
         liquibase.setDataSource(database);
@@ -54,5 +54,4 @@ class Database {
         return liquibase;
 
     }
-    */
 }
