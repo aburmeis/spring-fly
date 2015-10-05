@@ -28,6 +28,7 @@ public final class Airport implements Serializable {
     }
 
     private final String iataCode;
+    private String name;
     private Location location;
     private Country country;
 
@@ -37,6 +38,14 @@ public final class Airport implements Serializable {
 
     public String getIataCode() {
         return iataCode;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public Location getLocation() {
