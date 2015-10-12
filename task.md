@@ -1,17 +1,14 @@
-Task 10
+Task 11
 -------
 
-Create an error handler to make an unknown airport or invalid country return a valid JSON with error message and appropriate HTTP response status code:
+Create an additional flight controller offering destinations and connections.
 
-
-
-| Mapping | Reponse |
+| Mapping | Service |
 | :------ | :-------- |
-| [/rest/airport/XYZ](http://localhost:8080/rest/airport/XYZ) | 404 |
-| [/rest/airport/search?country=foo](http://localhost:8080/rest/airport/search?country=foo) | 400 |
+| [/rest/flight/destination/{iataCode}](http://localhost:8080/rest/flight/destination/FRA?maxStops=1) | all destination airports with a maximum number of stops (default to direct connections) |
+| [/rest/flight/connection/{iataCode}/{iataCode}](http://localhost:8080/rest/flight/connection/FRA/JFK?maxStops=1) | all connections from the departure (first) airport to the destination (second) airport with a maximum number of stops (default to direct connections) |
 
 Tips:
 
-* create a `@ControllerAdvice` with`@ExceptionHandler` methods for each return status
-* extend the integration test by an error case
-* You may use `ResponseEntity` and `ErrorAttributes` if you like
+* create a new controller using both `AirportRegistry` and `FlightCatalog`
+* do not return connections but list of list of flights
