@@ -1,16 +1,17 @@
-Task 9
-------
+Task 10
+-------
 
-Spring Boot has an easy support to enable Web MVC. This has been done in `Config` by adding `@EnableWebMvc`.
-Add an airport controller which offers the following access to the airport registry:
+Create an error handler to make an unknown airport or invalid country return a valid JSON with error message and appropriate HTTP response status code:
 
-| Mapping | Operation |
+
+
+| Mapping | Reponse |
 | :------ | :-------- |
-| [/rest/airport/{iataCode}](http://localhost:8080/rest/airport/FRA) | return the attributes for the airport with the passed IATA code. |
-| [/rest/airport/search](http://localhost:8080/rest/airport/search?country=DE) | return all airports with their attributes, optionally for one country only if a parameter `country` is passed with a 2-letter ISO code. |
+| [/rest/airport/XYZ](http://localhost:8080/rest/airport/XYZ) | 404 |
+| [/rest/airport/search?country=foo](http://localhost:8080/rest/airport/search?country=foo) | 400 |
 
 Tips:
 
-* create a new `com.tui.fly.web.AirportController` using `@RestController` and `@RequestMapping`
-* write a unit test `MockMvcBuilders.standaloneSetup(controller).build()`
-* use `gradle bootRun` to do a manual integration test using the links above
+* create a `@ControllerAdvice` with`@ExceptionHandler` methods for each return status
+* extend the integration test by an error case
+* You may use `ResponseEntity` and `ErrorAttributes` if you like
