@@ -3,8 +3,12 @@ package com.tui.fly.service;
 import com.tui.fly.domain.Airport;
 import com.tui.fly.domain.Connection;
 import com.tui.fly.domain.Flight;
+
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.springframework.jdbc.core.JdbcOperations;
 import org.springframework.jdbc.core.RowMapper;
 
@@ -16,7 +20,9 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.AdditionalMatchers.aryEq;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 public class DatabaseFlightCatalogTest {
 
@@ -41,56 +47,63 @@ public class DatabaseFlightCatalogTest {
         BA200.setTo(JFK);
     }
 
+    @InjectMocks
     private DatabaseFlightCatalog catalog;
+    @Mock
     private JdbcOperations jdbc;
+    @Mock
+    private DatabaseAirportRegistry airports;
 
     @Test
     public void directDestinationsAreFound() {
-        when(jdbc.query(anyString(), any(Object[].class), any(RowMapper.class)))
+        when(jdbc.query(anyString(), any(Object[].class), anyRowMapper()))
                 .thenReturn(asList(LHR, JFK));
 
         assertThat(catalog.findDestinations(FRA, 0), hasItems(LHR, JFK));
 
-        verify(jdbc).query(anyString(), aryEq(new Object[]{FRA.getIataCode()}), any(RowMapper.class));
+        verify(jdbc).query(anyString(), aryEq(new Object[]{FRA.getIataCode()}), anyRowMapper());
     }
 
     @Test
     public void indirectDestinationsAreFound() {
-        when(jdbc.query(anyString(), any(Object[].class), any(RowMapper.class)))
+        when(jdbc.query(anyString(), any(Object[].class), anyRowMapper()))
                 .thenReturn(asList(LHR, JFK), asList(JFK, SFO), asList(SFO, MIA));
 
         assertThat(catalog.findDestinations(FRA, 1), hasItems(LHR, JFK, SFO, MIA));
 
-        verify(jdbc).query(anyString(), aryEq(new Object[]{FRA.getIataCode()}), any(RowMapper.class));
-        verify(jdbc).query(anyString(), aryEq(new Object[]{LHR.getIataCode()}), any(RowMapper.class));
-        verify(jdbc).query(anyString(), aryEq(new Object[]{JFK.getIataCode()}), any(RowMapper.class));
+        verify(jdbc).query(anyString(), aryEq(new Object[] {FRA.getIataCode()}), anyRowMapper());
+        verify(jdbc).query(anyString(), aryEq(new Object[] {LHR.getIataCode()}), anyRowMapper());
+        verify(jdbc).query(anyString(), aryEq(new Object[]{JFK.getIataCode()}), anyRowMapper());
     }
 
     @Test
     public void directConnectionsAreFound() {
-        when(jdbc.query(anyString(), any(Object[].class), any(RowMapper.class)))
+        when(jdbc.query(anyString(), any(Object[].class), anyRowMapper()))
                 .thenReturn(asList(LH100, BA200));
 
         assertThat(catalog.findConnections(FRA, LHR, 0), hasItems(new Connection(LH100), new Connection(BA200)));
 
-        verify(jdbc).query(anyString(), aryEq(new Object[]{FRA.getIataCode(), LHR.getIataCode()}), any(RowMapper.class));
+        verify(jdbc).query(anyString(), aryEq(new Object[]{FRA.getIataCode(), LHR.getIataCode()}), anyRowMapper());
     }
 
     @Test
     public void indirectConnectionsAreFound() {
-        when(jdbc.query(anyString(), any(Object[].class), any(RowMapper.class)))
+        when(jdbc.query(anyString(), any(Object[].class), anyRowMapper()))
                 .thenReturn(asList(LH200), asList(LH100), asList(BA200));
 
         assertThat(catalog.findConnections(FRA, JFK, 1), hasItems(new Connection(LH100, BA200), new Connection(LH200)));
 
-        verify(jdbc, times(2)).query(anyString(), aryEq(new Object[]{FRA.getIataCode(), JFK.getIataCode()}), any(RowMapper.class));
-        verify(jdbc).query(anyString(), aryEq(new Object[]{LHR.getIataCode(), JFK.getIataCode()}), any(RowMapper.class));
+        verify(jdbc, times(2)).query(anyString(), aryEq(new Object[] {FRA.getIataCode(), JFK.getIataCode()}), anyRowMapper());
+        verify(jdbc).query(anyString(), aryEq(new Object[]{LHR.getIataCode(), JFK.getIataCode()}), anyRowMapper());
     }
 
     @Before
     public void createRepository() {
-        jdbc = mock(JdbcOperations.class);
-        catalog = new DatabaseFlightCatalog(jdbc, mock(DatabaseAirportRegistry.class));
+        MockitoAnnotations.initMocks(this);
     }
 
+    @SuppressWarnings("unchecked")
+    private <T> RowMapper<T> anyRowMapper() {
+        return any(RowMapper.class);
+    }
 }

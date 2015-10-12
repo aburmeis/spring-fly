@@ -2,8 +2,12 @@ package com.tui.fly.service;
 
 import com.tui.fly.domain.Airport;
 import com.tui.fly.domain.Country;
+
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcOperations;
 import org.springframework.jdbc.core.RowMapper;
@@ -19,7 +23,8 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.AdditionalMatchers.aryEq;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 public class DatabaseAirportRegistryTest {
 
@@ -27,50 +32,56 @@ public class DatabaseAirportRegistryTest {
     public static final Airport LHR = airport("LHR");
     public static final Country GERMANY = country("DE");
 
+    @InjectMocks
     private DatabaseAirportRegistry registry;
+    @Mock
     private JdbcOperations jdbc;
 
     @Test
     public void allAirportsAreFound() {
-        when(jdbc.query(anyString(), any(RowMapper.class)))
+        when(jdbc.query(anyString(), anyRowMapper()))
                 .thenReturn(asList(FRA, LHR));
 
         assertThat(registry.findAirports(), hasItems(FRA, LHR));
 
-        verify(jdbc).query(anyString(), any(RowMapper.class));
+        verify(jdbc).query(anyString(), anyRowMapper());
     }
 
     @Test
     public void airportsOfCountryAreFound() {
-        when(jdbc.query(anyString(), any(Object[].class), any(RowMapper.class)))
-                .thenReturn(asList(FRA));
+        when(jdbc.query(anyString(), any(Object[].class), anyRowMapper()))
+            .thenReturn(asList(FRA));
 
         assertThat(registry.findAirports(GERMANY), hasItems(FRA));
 
-        verify(jdbc).query(anyString(), aryEq(new Object[]{GERMANY.getIsoCode()}), any(RowMapper.class));
+        verify(jdbc).query(anyString(), aryEq(new Object[]{GERMANY.getIsoCode()}), anyRowMapper());
     }
 
     @Test
     public void singleAirportIsFound() {
-        when(jdbc.queryForObject(anyString(), any(Object[].class), any(RowMapper.class)))
-                .thenReturn(FRA);
+        when(jdbc.queryForObject(anyString(), any(Object[].class), anyRowMapper()))
+            .thenReturn(FRA);
 
         assertThat(registry.getAirport(FRA.getIataCode()), is(FRA));
 
-        verify(jdbc).queryForObject(anyString(), aryEq(new Object[]{FRA.getIataCode()}), any(RowMapper.class));
+        verify(jdbc).queryForObject(anyString(), aryEq(new Object[] {FRA.getIataCode()}), anyRowMapper());
     }
 
     @Test(expected = NoSuchElementException.class)
     public void unknownAirportRaisesError() {
-        when(jdbc.queryForObject(anyString(), any(Object[].class), any(RowMapper.class)))
-                .thenThrow(new IncorrectResultSizeDataAccessException(1, 0));
+        when(jdbc.queryForObject(anyString(), any(Object[].class), anyRowMapper()))
+            .thenThrow(new IncorrectResultSizeDataAccessException(1, 0));
 
         registry.getAirport("NIX");
     }
 
     @Before
     public void createRepository() {
-        jdbc = mock(JdbcOperations.class);
-        registry = new DatabaseAirportRegistry(jdbc);
+        MockitoAnnotations.initMocks(this);
+    }
+    
+    @SuppressWarnings("unchecked")
+    private <T> RowMapper<T> anyRowMapper() {
+        return any(RowMapper.class);
     }
 }
