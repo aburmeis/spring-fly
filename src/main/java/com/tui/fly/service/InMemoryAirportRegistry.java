@@ -3,6 +3,7 @@ package com.tui.fly.service;
 import com.tui.fly.domain.Airport;
 import com.tui.fly.domain.Country;
 import com.tui.fly.domain.Location;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
@@ -13,13 +14,14 @@ import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.util.HashSet;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
 import static com.tui.fly.domain.Airport.airport;
 import static java.lang.Double.parseDouble;
 import static java.util.Arrays.asList;
+import static java.util.stream.Collectors.toSet;
+import static java.util.stream.StreamSupport.stream;
 
 @Service
 @Profile("memory")
@@ -36,20 +38,22 @@ class InMemoryAirportRegistry implements InitializingBean, AirportRegistry {
 
     @Override
     public void afterPropertiesSet() throws IOException {
-        airports = new HashSet<>();
-        for (String[] columns : new CsvReader(data)) {
-            if (columns.length > 0) {
-                try {
-                    Airport airport = parseAirport(columns);
-                    airports.add(airport);
-                } catch (RuntimeException invalid) {
-                    log.warn("Skipping invalid data {}: {}", asList(columns), invalid);
+        airports = stream(new CsvReader(data).spliterator(), false)
+            .filter(columns -> columns.length > 0)
+            .map(columns -> {
+                    try {
+                        return parseAirport(columns);
+                    } catch (RuntimeException invalid) {
+                        log.warn("Skipping invalid data {}: {}", asList(columns), invalid);
+                        return null;
+                    }
                 }
-            }
-        }
+            )
+            .filter(airport -> airport != null)
+            .collect(toSet());
         log.info("Read {} airports", airports.size());
     }
-
+    
     @Override
     public Set<Airport> findAirports() {
         log.info("find all {} airports", airports.size());
@@ -59,12 +63,9 @@ class InMemoryAirportRegistry implements InitializingBean, AirportRegistry {
     @Override
     public Set<Airport> findAirports(Country country) {
         log.info("find airports by country {}", country);
-        HashSet<Airport> airportsOfCountry = new HashSet<>();
-        for (Airport candidate : airports) {
-            if (country.equals(candidate.getCountry())) {
-                airportsOfCountry.add(candidate);
-            }
-        }
+        Set<Airport> airportsOfCountry = airports.stream()
+            .filter(airport -> country.equals(airport.getCountry()))
+            .collect(toSet());
         log.debug("Found {} airports in {}", airportsOfCountry.size(), country);
         return airportsOfCountry;
     }
@@ -72,11 +73,9 @@ class InMemoryAirportRegistry implements InitializingBean, AirportRegistry {
     @Override
     public Airport getAirport(String iataCode) {
         log.info("get airport by IATA code {}", iataCode);
-        Airport airport = airport(iataCode);
-        if (!airports.contains(airport)) {
-            throw new NoSuchElementException("Unknown airport " + iataCode);
-        }
-        return airport;
+        return airports.stream()
+            .filter(airport -> airport.getIataCode().equals(iataCode))
+            .findAny().orElseThrow(() -> new NoSuchElementException("Unknown airport " + iataCode));
     }
 
     private Airport parseAirport(String[] columns) {

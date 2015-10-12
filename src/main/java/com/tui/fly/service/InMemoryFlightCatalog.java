@@ -3,6 +3,7 @@ package com.tui.fly.service;
 import com.tui.fly.domain.Airport;
 import com.tui.fly.domain.Connection;
 import com.tui.fly.domain.Flight;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
@@ -13,10 +14,19 @@ import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.tui.fly.domain.Airline.airline;
 import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
+import static java.util.stream.Collectors.toList;
+import static java.util.stream.StreamSupport.stream;
 
 @Service
 @Profile("memory")
@@ -35,19 +45,19 @@ class InMemoryFlightCatalog implements InitializingBean, FlightCatalog {
 
     @Override
     public void afterPropertiesSet() throws IOException {
-        this.flights = new ArrayList<>();
-        int no = 0;
-        for (String[] columns : new CsvReader(data)) {
-            if (columns.length == 3) {
-                int number = 100 + no++;
+        AtomicInteger number = new AtomicInteger(100);
+        flights = stream(new CsvReader(data).spliterator(), false)
+            .filter(columns -> columns.length == 3)
+            .map(columns -> {
                 try {
-                    Flight flight = parseFlight(columns, number);
-                    flights.add(flight);
+                    return parseFlight(columns, number.getAndIncrement());
                 } catch (RuntimeException invalid) {
                     log.warn("Skipping invalid data {}: {}", asList(columns), invalid);
+                    return null;
                 }
-            }
-        }
+            })
+            .filter(flight -> flight != null)
+            .collect(toList());
         log.info("Read {} flights", flights.size());
     }
 
@@ -87,20 +97,21 @@ class InMemoryFlightCatalog implements InitializingBean, FlightCatalog {
     }
 
     private List<Connection> findConnections(List<Flight> before, Airport departure, Airport destination, int maxStops) {
-        List<Connection> connections = new ArrayList<>();
-        for (Flight flight : flights) {
-            if (flight.getFrom().equals(departure)) {
+        return flights.stream()
+            .filter(flight -> flight.getFrom().equals(departure))
+            .filter(flight -> maxStops > 0 || flight.getTo().equals(destination))
+            .map(flight -> {
                 if (flight.getTo().equals(destination)) {
                     List<Flight> route = new ArrayList<>(before);
                     route.add(flight);
-                    connections.add(new Connection(route));
-                } else if (maxStops > 0) {
+                    return singletonList(new Connection(route));
+                } else {
                     List<Flight> nextBefore = new ArrayList<>(before);
                     nextBefore.add(flight);
-                    connections.addAll(findConnections(nextBefore, flight.getTo(), destination, maxStops - 1));
+                    return findConnections(nextBefore, flight.getTo(), destination, maxStops - 1);
                 }
-            }
-        }
-        return connections;
+            })
+            .flatMap(Collection::stream)
+            .collect(toList());
     }
 }
