@@ -2,6 +2,7 @@ package com.tui.fly.web;
 
 import com.tui.fly.domain.Airport;
 import com.tui.fly.domain.Country;
+import com.tui.fly.domain.String2CountryConverter;
 import com.tui.fly.service.AirportRegistry;
 
 import org.junit.Before;
@@ -9,6 +10,7 @@ import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.format.support.DefaultFormattingConversionService;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
@@ -79,6 +81,8 @@ public class AirportControllerTest {
     @Before
     public void createMvc() {
         MockitoAnnotations.initMocks(this);
-        mvc = MockMvcBuilders.standaloneSetup(controller).build();
+        DefaultFormattingConversionService conversionService = new DefaultFormattingConversionService();
+        conversionService.addConverter(new String2CountryConverter());
+        mvc = MockMvcBuilders.standaloneSetup(controller).setConversionService(conversionService).build();
     }
 }

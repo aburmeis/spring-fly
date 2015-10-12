@@ -16,7 +16,7 @@ import java.util.Set;
 
 @RestController
 @RequestMapping("/rest/airport")
-public class AirportController {
+class AirportController {
 
     @Autowired
     private AirportRegistry registry;
@@ -35,7 +35,7 @@ public class AirportController {
     }
 
     @RequestMapping("/search")
-    public Set<Airport> getAirports(@RequestParam(required = false) String country) {
-        return country == null ? registry.findAirports() : registry.findAirports(Country.country(country));
+    public Set<Airport> getAirports(@RequestParam(required = false) Country country) {
+        return country == null ? registry.findAirports() : registry.findAirports(country);
     }
 }
