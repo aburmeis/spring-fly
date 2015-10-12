@@ -2,6 +2,8 @@ package com.tui.fly.service;
 
 import com.tui.fly.domain.Airport;
 import com.tui.fly.domain.Country;
+import com.tui.fly.domain.Location;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +15,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.LinkedHashSet;
@@ -69,7 +72,13 @@ class DatabaseAirportRegistry implements AirportRegistry {
         @Override
         public Airport mapRow(ResultSet rs, int rowNum) throws SQLException {
             Airport airport = airport(rs.getString("iata_code"));
+            airport.setName(rs.getString("name"));
             airport.setCountry(country(rs.getString("country")));
+            BigDecimal latitude = rs.getObject("latitude", BigDecimal.class);
+            BigDecimal longitude = rs.getObject("longitude", BigDecimal.class);
+            if (latitude != null && longitude != null) {
+                airport.setLocation(new Location(latitude.doubleValue(), longitude.doubleValue()));
+            }
             return airport;
         }
     }

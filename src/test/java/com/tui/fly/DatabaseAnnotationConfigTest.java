@@ -1,21 +1,9 @@
 package com.tui.fly;
 
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.test.context.ActiveProfiles;
-
-import java.util.Properties;
+import org.springframework.test.context.TestPropertySource;
 
 @ActiveProfiles("database")
+@TestPropertySource(properties = {"liquibase.enabled=true", "liquibase.changeLog=classpath:liquibase.xml"})
 public class DatabaseAnnotationConfigTest extends AbstractConfigTest {
-
-    @Bean
-    public static PropertySourcesPlaceholderConfigurer properties() throws Exception {
-        PropertySourcesPlaceholderConfigurer pspc = new PropertySourcesPlaceholderConfigurer();
-        Properties properties = new Properties();
-        properties.put("liquibase.enabled", "true");
-        properties.put("liquibase.change-log", "classpath:liquibase.xml");
-        pspc.setProperties(properties);
-        return pspc;
-    }
 }
