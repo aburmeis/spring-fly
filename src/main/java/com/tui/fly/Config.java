@@ -20,13 +20,13 @@ class Config extends WebMvcConfigurerAdapter {
     @Bean
     @Profile("memory")
     public Resource flightData() {
-        return new ClassPathResource("flights.csv");
+        return new ClassPathResource("data/flights.csv");
     }
 
     @Bean
     @Profile("memory")
     public Resource airportData() {
-        return new ClassPathResource("airports.csv");
+        return new ClassPathResource("data/airports.csv");
     }
 
     @Override

@@ -14,7 +14,7 @@
             <column name="latitude" type="number(12,8)"/>
             <column name="longitude" type="number(12,8)"/>
         </createTable>
-        <loadData tableName="airport" file="airports.csv" separator=",">
+        <loadData tableName="airport" file="data/airports.csv" separator=",">
             <column index="0" name="iata_code" type="STRING"/>
             <column index="1" name="name" type="STRING"/>
             <column index="2" name="country" type="STRING"/>
@@ -37,7 +37,7 @@
                 <constraints nullable="false" foreignKeyName="fk_flight_destination" referencedTableName="airport" referencedColumnNames="iata_code"/>
             </column>
         </createTable>
-        <loadData tableName="flight" file="flights.csv" separator=",">
+        <loadData tableName="flight" file="data/flights.csv" separator=",">
             <column index="0" name="carrier" type="STRING"/>
             <column name="flight_no" type="COMPUTED"/>
             <column index="1" name="departure" type="STRING"/>
