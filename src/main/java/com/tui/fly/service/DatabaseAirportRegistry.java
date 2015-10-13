@@ -25,6 +25,8 @@ import java.util.Set;
 
 import static com.tui.fly.domain.Airport.airport;
 import static com.tui.fly.domain.Country.country;
+import static java.util.stream.Collectors.joining;
+import static java.util.stream.IntStream.rangeClosed;
 
 @Repository
 @Profile("database")
@@ -49,7 +51,9 @@ class DatabaseAirportRegistry implements AirportRegistry {
     @Override
     @Transactional(readOnly = true)
     public Set<Airport> findAirports(Country country) {
-        List<Airport> airportsOfCountry = jdbc.query("SELECT * FROM airport WHERE country = ?", new Object[]{country.getIsoCode()}, new AirportMapper());
+        List<String> codes = country.getIsoCodes();
+        String inValues = rangeClosed(1, codes.size()).mapToObj(i -> "?").collect(joining(",", "(", ")"));
+        List<Airport> airportsOfCountry = jdbc.query("SELECT * FROM airport WHERE country IN " + inValues, codes.toArray(), new AirportMapper());
         log.debug("Found {} airports in {}", airportsOfCountry.size(), country);
         return new LinkedHashSet<>(airportsOfCountry);
     }
