@@ -2,6 +2,7 @@ package com.tui.fly.domain;
 
 import java.io.ObjectStreamException;
 import java.io.Serializable;
+import java.util.Locale;
 import java.util.regex.Pattern;
 
 public final class Country implements Serializable {
@@ -35,6 +36,10 @@ public final class Country implements Serializable {
 
     public String getIsoCode() {
         return isoCode;
+    }
+    
+    public String getName(Locale locale) {
+        return new Locale("", isoCode).getDisplayCountry(locale);
     }
 
     @Override
