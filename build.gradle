@@ -21,6 +21,7 @@ dependencies {
     compile "org.slf4j:slf4j-api:$slf4jVersion",
         'org.springframework.boot:spring-boot-starter-jdbc',
         'org.springframework.boot:spring-boot-starter-web',
+        'org.springframework.boot:spring-boot-starter-thymeleaf',
         'org.springframework:spring-context-support',
         'com.fasterxml.jackson.core:jackson-databind',
         "org.hsqldb:hsqldb:2.3.2",
