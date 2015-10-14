@@ -36,12 +36,12 @@ class FlightController {
         return api;
     }
 
-    @RequestMapping("/destination/{departure}")
+    @RequestMapping("/destination/{departure:[A-Z]{3}}")
     public Set<Airport> findDestinations(@PathVariable String departure, @RequestParam(required = false, defaultValue = "0") int maxStops) {
         return flights.findDestinations(airports.getAirport(departure), maxStops);
     }
 
-    @RequestMapping("/connection/{departure}/{destination}")
+    @RequestMapping("/connection/{departure:[A-Z]{3}}/{destination:[A-Z]{3}}")
     public List<List<Flight>> findConnection(@PathVariable String departure, @PathVariable String destination, @RequestParam(required = false, defaultValue = "0") int maxStops) {
         return flights.findConnections(airports.getAirport(departure), airports.getAirport(destination), maxStops).stream()
             .map(con -> stream(con.spliterator(), false).collect(toList()))

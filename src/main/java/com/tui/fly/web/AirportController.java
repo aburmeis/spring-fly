@@ -29,7 +29,7 @@ class AirportController {
         return api;
     }
 
-    @RequestMapping("/{iataCode}")
+    @RequestMapping("/{iataCode:[A-Z]{3}}")
     public Airport getAirport(@PathVariable String iataCode) {
         return registry.getAirport(iataCode);
     }
