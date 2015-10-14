@@ -2,7 +2,19 @@
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8"/>
+    <meta name="viewport" content="initial-scale=1.0"/>
     <title>Spring Fly</title>
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+        #map {
+            width: 80%;
+            height: 50%;
+        }
+    </style>
 </head>
 <body>
     <h1>Spring Fly</h1>
@@ -26,5 +38,28 @@
             </tr>
         </tbody>
     </table>
+    <script th:inline="javascript">
+        var map;
+        function initMap() {
+            var mapCenter = {lat: 0, lng: 0};
+            var mapData = JSON.parse(/*[[${mapData}]]*/ '[]');
+
+            map = new google.maps.Map(document.getElementById('map'), {
+                center: mapCenter,
+                scrollwheel: false,
+                zoom: 3
+            });
+
+            for (var i in mapData) {
+                new google.maps.Marker({
+                    map: map,
+                    position: mapData[i].position,
+                    label: mapData[i].label,
+                    title: mapData[i].title
+                });
+            }
+        }
+    </script>
+    <script th:src="@{https://maps.googleapis.com/maps/api/js(key=${googleMapsApiKey},callback='initMap')}" async="async" defer="defer"></script>
 </body>
 </html>
