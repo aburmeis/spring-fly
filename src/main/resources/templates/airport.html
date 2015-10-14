@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Spring Fly</title>
+</head>
+<body>
+    <h1>Spring Fly</h1>
+    <form th:replace="fragments/forms :: airportForm"/>
+    <h2 th:text="#{airports}">Airports</h2>
+    <table>
+        <thead>
+            <tr>
+                <th th:text="#{airport.iataCode}">IATA code</th>
+                <th th:text="#{airport.name}">Name</th>
+                <th th:text="#{airport.country}">Country</th>
+                <th th:text="#{airport.location}">Location</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="ap : ${airports}">
+                <td th:text="${{ap.iataCode}}">XYZ</td>
+                <td th:text="${{ap.name}}">Airport</td>
+                <td th:text="${{ap.country.getName(#locale)}}">Country</td>
+                <td th:if="${ap.location != null}" th:text="${{ap.location.latitude}} + ' / ' + ${{ap.location.longitude}}">Location</td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>

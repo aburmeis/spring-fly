@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Spring Fly</title>
+</head>
+<body>
+    <h1>Ups!</h1>
+    <p>An error occurred: <span th:text="${error}">error</span></p>
+    <p><span th:text="${exception}">exception</span>: <span th:text="${message}">message</span></p>
+    <ul th:if="${errors != null}">
+        <li th:each="e : ${errors}" th:text="${e}">error</li>
+    </ul>
+</body>
+</html>
