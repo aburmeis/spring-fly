@@ -44,10 +44,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
-public class FormControllerTest {
+public class ViewControllerTest {
 
     @InjectMocks
-    private FormController controller;
+    private ViewController controller;
     @Mock
     private AirportRegistry airports;
     @Mock

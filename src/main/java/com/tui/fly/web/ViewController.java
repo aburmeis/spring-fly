@@ -30,7 +30,7 @@ import static org.springframework.util.StringUtils.hasText;
 
 @Controller
 @RequestMapping("/")
-class FormController {
+class ViewController {
 
     private static final Logger LOG = LoggerFactory.getLogger(FlightController.class);
 
@@ -48,13 +48,13 @@ class FormController {
         return Stream.of(Locale.getISOCountries()).map(Country::country).collect(toList());
     }
 
-    @RequestMapping(value = "index", method = RequestMethod.GET)
+    @RequestMapping(value = {"", "index"}, method = RequestMethod.GET)
     public ModelAndView showForm(ModelMap model, @ModelAttribute("form") AirportSearch form) {
         LOG.info("show form {}", form);
         return new ModelAndView("index", model);
     }
 
-    @RequestMapping(value = "airport")
+    @RequestMapping(value = "airport", method = RequestMethod.POST)
     public ModelAndView findAirports(ModelMap model, @ModelAttribute("form") AirportSearch form) {
         LOG.info("find airports {}", form);
         Set<Airport> found;
