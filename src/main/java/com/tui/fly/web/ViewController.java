@@ -44,8 +44,11 @@ class ViewController {
     String googleMapsApiKey;
 
     @ModelAttribute("countries")
-    public List<Country> populateCountries() {
-        return Stream.of(Locale.getISOCountries()).map(Country::country).collect(toList());
+    public List<Country> populateCountries(Locale locale) {
+        return Stream.of(Locale.getISOCountries())
+            .map(Country::country)
+            .sorted((a, b) -> a.getName(locale).compareTo(b.getName(locale)))
+            .collect(toList());
     }
 
     @RequestMapping(value = {"", "index"}, method = RequestMethod.GET)
