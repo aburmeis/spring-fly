@@ -68,13 +68,18 @@ class ViewController {
         } else {
             found = airports.findAirports();
         }
-        model.addAttribute("airports", found).addAttribute("googleMapsApiKey", googleMapsApiKey).addAttribute("mapData", asJson(createAllMapData(found)));
+        model.addAttribute("airports", found)
+            .addAttribute("googleMapsApiKey", googleMapsApiKey)
+            .addAttribute("mapData", asJson(createAllMapData(found)));
         LOG.debug("airport model {}", model);
         return new ModelAndView("airport", model);
     }
 
     private List<Map<String, Object>> createAllMapData(Set<Airport> found) {
-        return found.stream().filter(ap -> ap.getLocation() != null).map(this::createMapData).collect(toList());
+        return found.stream()
+            .filter(ap -> ap.getLocation() != null)
+            .map(this::createMapData)
+            .collect(toList());
     }
 
     private Map<String,Object> createMapData(Airport airport) {

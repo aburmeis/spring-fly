@@ -56,6 +56,13 @@ public class ViewControllerTest {
     private MockMvc mvc;
 
     @Test
+    public void welcomeFileIsIndex() throws Exception {
+        mvc.perform(get("/"))
+            .andExpect(status().isOk())
+            .andExpect(view().name("index"));
+    }
+
+    @Test
     public void initialFormIsRequested() throws Exception {
         mvc.perform(get("/index.html"))
             .andExpect(status().isOk())
